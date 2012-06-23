@@ -1,0 +1,56 @@
+<%inherit file="mgrbase.html" />
+
+<iframe name="ifsubmit" height="0" style="display:none"></iframe>
+<div class="simple-list">
+	<div class="mgr-content">
+		<h1>相片管理</h1>
+		% if mgrprivilege:
+		<form action="xxx" class="photoform" method="post" enctype="multipart/form-data"
+			target="ifsubmit">
+			<div><label>id:</label><label name="id"></label></div>
+			<div><label>标题:</label></div>
+			<div><input type="text" name="name" value="" /></div>
+			<div><label>描述:</label></div>
+			<div><textarea name="description" ></textarea></div>
+			% if photoid is None:
+			<div><label>上传文件:</label></div>
+			<div><input type="file" id="uploadfile" onchange="showimg(this)" name="content"></input></div>
+			% endif
+			<img src="" id="imgphoto" width="600"></img>
+			<div>
+				<label>权限：</label>
+				<select name="privilege">
+					<option value="-1">匿名可读</option>
+					<option value="0">用户可读</option>
+					<option value="1">用户读写</option>
+					<option value="2">管理员读写</option>
+				</select>
+			</div>
+			<input type="submit" name="submit" value="提交" id="submit"></input>
+			<input type="button" name="new" value="新建" id="new"
+			onclick="window.location.href='/manage/photo'"></input>
+			<input type="button" name="delete" value="删除" id="delete"></input>
+		</form>
+		% else:
+		${self.errPrivilege()}
+		% endif
+	</div>
+</div>
+
+% if mgrprivilege:
+<script type="text/javascript" src="/static/js/client.js"></script>
+<script type="text/javascript">
+	$(function(){
+			var url = "/rest/photo/";
+			% if photoid:
+			var photoid = modifyPhoto(url, ${photoid});
+			% else:
+			var photoid = addPhoto(url);
+			% endif
+			mgrPhotoAction(url, photoid);
+			});
+		</script>
+		% endif
+
+<%def name="navmgrtype()">photo</%def>
+

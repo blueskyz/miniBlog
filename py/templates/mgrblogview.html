@@ -1,0 +1,53 @@
+<%inherit file="mgrbase.html" />
+
+<div class="simple-list">
+	<div class="mgr-content">
+		<h1>日志管理</h1>
+		% if mgrprivilege:
+		<div class="blogform">
+			<form action="" method="post">
+				<div><label>id:</label><label name="id"></label></div>
+				<div><label>标题:</label></div>
+				<div><input type="text" name="title" value="" /></div>
+				<div><label>内容:</label></div>
+				<div><textarea name="content" rows="30" cols="80" ></textarea></div>
+				<div id="privilege">
+					<label>权限：</label>
+					<select>
+						<option value="-1">匿名可读</option>
+						<option value="0">用户可读</option>
+						<option value="1">用户读写</option>
+						<option value="2">管理员读写</option>
+					</select>
+				</div>
+				<div id="blogcategory">
+					<label>分类：</label>
+					<select>
+					</select>
+				</div>
+				<input type="button" name="submit" value="提交" id="submit"></input>
+				<input type="button" name="new" value="新建" id="new"
+				onclick="window.location.href='/manage/blog'"></input>
+				<input type="button" name="delete" value="删除" id="delete"></input>
+			</form>
+		</div>
+		% else:
+		${self.errPrivilege()}
+		% endif
+	</div>
+</div>
+
+% if mgrprivilege:
+<script type="text/javascript" src="/static/third/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript">
+	% if blogid:
+	setneworedit.blogid = ${blogid};
+% else:
+	setneworedit.blogid = null;
+% endif
+
+	$(initmgrblog);
+</script>
+
+% endif
+

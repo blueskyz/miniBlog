@@ -1,0 +1,24 @@
+<%inherit file='base.html' />
+
+<%def name="category()">
+<h4>分类</h4>
+<ul>
+<li>暂无</li>
+</ul>
+</%def>
+
+<div class="simple-list">
+<h1>照片<span>风景 旅游</span></h1>
+<ul id="photo-ul">
+</ul>
+</div>
+<div class="splitpagediv"><ul class="splitpage"></ul></div>
+
+<script type="text/javascript">
+	var bedit = false;
+	% if mgrprivilege:
+	bedit = true;
+	% endif
+	$(function(){splitpage("/rest/photo/", "/rest/photo/list/", 
+				1, ${photocount}, 6, {bedit: bedit}, showphoto);});
+</script>

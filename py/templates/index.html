@@ -1,0 +1,30 @@
+<%inherit file='base.html' />
+
+<%def name="category()">
+<h4>分类</h4>
+<ul id="blogcategory">
+</ul>
+<script type="text/javascript">
+	$(showBlogCategory);
+</script>
+</%def>
+
+<div class="simple-list">
+	<h1>照片<span>风景 旅游</span><span class="morecontent"><a href="/photo">更多照片&gt;&gt;</a></span></h1>
+	<ul id="photo-ul">
+	</ul>
+</div>
+
+<script type="text/javascript">
+	$(function(){showphotoN(${photocount});});
+</script>
+
+<div class="simple-list">
+	<h1 id="blog-title"></h1>
+	<ul id="blog-ul">
+	</ul>
+</div>
+
+<script type="text/javascript">
+	$(function(){showBlogList({categoryid: 0, page: 1, blogcount: ${blogcount}});});
+</script>

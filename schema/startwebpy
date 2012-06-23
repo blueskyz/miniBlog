@@ -1,0 +1,2 @@
+#!/bin/sh
+spawn-fcgi -d /opt/data/station -f /opt/data/station/py/myweb.py -a 127.0.0.1 -p 31000 -F 5

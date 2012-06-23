@@ -1,0 +1,48 @@
+<%inherit file='base.html' />
+
+<%def name="loadcss()">
+<link type="text/css" rel="stylesheet" href="/static/third/syntaxhighlighter/styles/shCoreDefault.css"/>
+</%def>
+
+<%def name="category()">
+<h4>分类</h4>
+<ul id="blogcategory">
+</ul>
+<script type="text/javascript">
+	$(function(){showBlogCategory();});
+</script>
+</%def>
+
+<div class="simple-list">
+	<h1 id="blog-title"></h1>
+	<ul id="blog-ul"></ul>
+</div>
+<div class="splitpagediv"><ul class="splitpage"></ul></div>
+
+<script type="text/javascript" src="/static/third/syntaxhighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="/static/third/syntaxhighlighter/scripts/shBrushCpp.js"></script>
+<script type="text/javascript">SyntaxHighlighter.all();</script>
+
+<script type="text/javascript">
+	$(function(){
+			% if mgrprivilege:
+			var bEdit = true;
+			% else:
+			var bEdit = false;
+			% endif
+
+			var categoryidval = 0;
+			% if categoryid:
+			categoryidval = ${categoryid};
+			% endif
+
+			% if blogid:
+			showBlogContent(categoryidval, ${blogid}, bEdit);
+			% else:
+			var categoryurl = "/rest/blog/category/" + categoryidval + "/";
+			splitpage(categoryurl + "count", categoryurl, 1, ${blogcount}, 6, 
+				{categoryid: categoryidval, page: 1, blogcount: ${blogcount}, bEdit: bEdit}, 
+				showBlogList);
+			% endif
+			});
+</script>

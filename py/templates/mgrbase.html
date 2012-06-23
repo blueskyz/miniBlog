@@ -1,0 +1,23 @@
+<%inherit file='base.html' />
+
+<%def name="category()">
+<h4>分类</h4>
+<ul id="mgrcategory">
+	<li><a href="/manage/blog/">日志管理</a></li>
+	<li><a href="/manage/photo/">相片管理</a></li>
+	<li><a href="/manage/user/">用户管理</a></li>
+	<li><a href="/manage/resource/">资源管理</a></li>
+</ul>
+
+<script type="text/javascript">
+$(function(){
+		var alist = $(".widget-side ul#mgrcategory li a");
+		var pattern = /(^\/[^\/]*\/[^\/]*)/;
+		setLiSelected(pattern, alist, location.pathname);
+		});
+</script>
+</%def>
+
+<%def name="errPrivilege()">
+<span class="errContent">权限不够，请登录</span>
+</%def>

@@ -1,0 +1,78 @@
+<%inherit file="mgrbase.html" />
+
+<div class="simple-list">
+	<div class="mgr-content">
+		<h1>用户管理</h1>
+		% if mgrprivilege:
+		<form id="userform" action="" method="post">
+			<!--
+			<div><label>id:</label><label name="id"></label></div>
+			-->
+			<div>
+				<label>id ：</label>
+				<input class="input-text" disabled="disabled" type="text" name="id" value=""></input>
+			</div>
+			<div>
+				<label>用户名：</label>
+				<input class="input-text" type="text" maxlength="64" name="name" value=""></input>
+			</div>
+			<div>
+				<label>姓名：</label>
+				<input class="input-text" type="text" maxlength="64" name="localname" value=""></input>
+			</div>
+			<div>
+				<label>密码：</label>
+				<input class="input-text" type="password" name="passwd" maxlength="64" value=""></input>
+			</div>
+			<div>
+				<label>确认密码：</label>
+				<input class="input-text" type="password" name="verifypasswd" maxlength="64" value=""></input>
+			</div>
+			<div>
+				<label>email：</label>
+				<input class="input-text" type="text" name="email" maxlength="128" value=""></input>
+			</div>
+			<div>
+				<label>手机：</label>
+				<input class="input-text" type="text" name="mobilephone" maxlength="64" value=""></input>
+			</div>
+			<div>
+				<label>描述：</label>
+				<textarea type="text" name="description" maxlength="1024"></textarea>
+			</div>
+			<div>
+				<label>权限：</label>
+				<select>
+					<option value="0">普通用户</option>
+					<option value="1">高级用户</option>
+					<option value="2">管理员</option>
+				</select>
+			</div>
+			<input type="button" name="submit" value="提交" id="submit"></input>
+			<input type="button" name="new" value="新建" id="new"
+			onclick="window.location.href='/manage/user/'"></input>
+			<input type="button" name="delete" value="删除" id="delete"></input>
+		</form>
+		% else:
+		${self.errPrivilege()}
+		% endif
+	</div>
+</div>
+
+% if mgrprivilege:
+<script type="text/javascript">
+$(function(){
+		var url = "/rest/user/";
+		% if userid:
+		url = initUserMgr(url, ${userid});
+		% else:
+		url = initUserMgr(url);
+		% endif
+		initUserMgrBt(url);
+		});
+
+</script>
+% endif
+
+<%def name="navmgrtype()">user</%def>
+
