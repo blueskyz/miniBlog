@@ -71,7 +71,7 @@ class photocontent:
 			buf["name"] = curlist[0]["name"]
 			buf["description"] = curlist[0]["description"]
 			timepath = time.localtime(int(photoid))
-			buf["imgphoto"] = "/filedb/photo/600/%s" % (curlist[0]['image'])
+			buf["imgphoto"] = "/photo/600/%s" % (curlist[0]['image'])
 			buf["privilege"] = curlist[0]["privilege"]
 			web.header('content-type', "application/json")
 			return json.dumps(buf, ensure_ascii=False)
@@ -159,7 +159,7 @@ class photocontent:
 			im = Image.open(fstr)
 			outstr = StringIO.StringIO()
 			rate = float(scale)/float(im.size[1])
-			size = (im.size[0] * rate, im.size[1] * rate)
+			size = (int(im.size[0] * rate), int(im.size[1] * rate))
 			im = self.__fix_orientation__(im)
 			im.thumbnail(size, Image.ANTIALIAS)
 			im.save(outstr, imagetype)
@@ -225,10 +225,15 @@ class photo:
 					where=curwhere).list()
 			if len(curlist) == 0:
 				raise Exception("can't find image")
-			imageFile = config.filedb + 'photo/org/' + curlist[0]["image"]
 			imagetype = curlist[0]["imagetype"]
-			scale = int(scale)
-			if scale != 1:
+			scale= int(scale)
+			if (scale== 80 or scale== 600):
+				web.header('content-type', itype[imagetype])
+				web.header("x-accel-redirect", 
+						"/filedb/photo/%d/%s" % (scale, curlist[0]["image"]))
+				return
+			if scale!= 1:
+				imageFile = config.filedb + 'photo/org/' + curlist[0]["image"]
 				buf = self.__getscalephoto__(itypename[imagetype], imageFile, scale)
 				#web.header('content-type', itype[imagetype])
 				return buf
@@ -245,7 +250,7 @@ class photo:
 			outstr = StringIO.StringIO()
 			im = Image.open(imageFile)
 			rate = float(scale)/float(im.size[1])
-			size = (im.size[0] * rate, im.size[1] * rate)
+			size = (int(im.size[0] * rate), int(im.size[1] * rate))
 			im = self.__fix_orientation__(im)
 			im.thumbnail(size, Image.ANTIALIAS)
 			im.save(outstr, imagetype)
@@ -289,8 +294,10 @@ class photolist:
 						time.localtime(photoiter["createtime"]))
 				photo["updated"] = time.strftime("%Y-%m-%d",
 						time.localtime(photoiter["updated"]))
-				photo["small-photo"] = "/filedb/photo/80/%s" % (photoiter["image"])
-				photo["big-photo"] = "/filedb/photo/600/%s" % (photoiter["image"])
+				#photo["small-photo"] = "/rest/photo/%d/80" % (photo["photoid"])
+				#photo["big-photo"] = "/rest/photo/%d/600" % (photo["photoid"])
+				photo["small-photo"] = "/mydb/photo/80/%s" % (photoiter["image"])
+				photo["big-photo"] = "/mydb/photo/600/%s" % (photoiter["image"])
 				photolist.append(photo)
 			web.header("content-type", "application/json")
 			return json.dumps(photolist, ensure_ascii=False)

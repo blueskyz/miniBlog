@@ -223,10 +223,10 @@ function showphotoN(photocount)
 				var curdata = data[i];
 				var curli = "<li class='photo-li'>" +
 					"<div class='photo-list'><ul><li>" +
-					"<a class='pirobox' href=" + curdata['big-photo'] + ">" +
-					"<img src=" + curdata['small-photo'] + 
-					" title=" + curdata['desc'] +
-					"></img></a></li>" +
+					"<a class='pirobox' href='" + curdata['big-photo'] + "'>" +
+					"<img src='" + curdata['small-photo'] + 
+					"' title='" + curdata['desc'] +
+					"'></img></a></li>" +
 					"<li>" + curdata['name'] + "</li>" +
 					"<li>" + curdata['time'] + "</li>" + 
 					"<li>" + curdata['updated'] + "[U]</li>" + 

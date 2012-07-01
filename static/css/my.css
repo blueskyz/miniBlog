@@ -86,7 +86,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 
 /**/
 #my-header {
-	background-color: #3b89ba;
+	background-color: #477ABD;
 	float: left;
 	width: 950px;
 	height: 100px;
@@ -282,8 +282,13 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 
 .simple-list .blog-li {
 	#border-top: 1px dashed #3B89BA;
-	margin-top: 8px;
-	margin-bottom: 30px;
+	padding-top: 8px;
+	padding-bottom: 16px;
+	margin-bottom: 10px;
+}
+
+.simple-list .blog-li:nth-child(even) {
+	background: #EDF4F1;
 }
 
 /*
@@ -496,7 +501,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 
 #my-footer {
 	margin-top: 8px;
-	background-color: #3b89ba;
+	background-color: #477ABD;
 	float: left;
 	width: 950px;
 	margin-bottom: 16px;

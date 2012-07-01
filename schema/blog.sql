@@ -56,8 +56,28 @@ CREATE INDEX privilege_ind ON photo (privilege);
 CREATE INDEX updated_ind ON photo (updated);
 CREATE INDEX year_ind ON photo(year);
 
+-- create sessions
 CREATE TABLE IF NOT EXISTS sessions ( session_id CHAR(128) UNIQUE NOT NULL,
-	timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	atime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	data char(255) DEFAULT NULL) ENGINE=MyIsam;
+
+-- create resource table
+CREATE TABLE IF NOT EXISTS resources ( resource_id char(128) UNIQUE NOT NULL,
+	utime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	ctime timestamp NOT NULL DEFAULT 0,
+	name char(255) DEFAULT NULL,
+	description varchar(1024)) ENGINE=MyIsam;
+
+-- create resource category
+CREATE TABLE IF NOT EXISTS res_category (category_id int(4) primary key NOT NULL, 
+	name char(255) NOT NULL, 
+	description varchar(512)) ENGINE=MyIsam;
+
+-- DROP TABLE IF EXISTS res_category_link;
+CREATE TABLE IF NOT EXISTS res_category_link(category_link_id int(4) primary key AUTO_INCREMENT,
+	category_id int(4) NOT NULL,
+	resource_id int(4) NOT NULL,
+	FOREIGN KEY(category_id) REFERENCES res_category(category_id),
+	FOREIGN KEY(resource_id) REFERENCES resources(resource_id)) ENGINE=MyIsam;
 
 -- ALTER TABLE users CHANGE user_id user_id INT(4) NOT NULL AUTO_INCREMENT;
