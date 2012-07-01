@@ -1,0 +1,34 @@
+server {
+	listen       8080;
+#server_name  localhost;
+
+	location / {
+		root /opt/data/station;
+		include fastcgi_params;
+		fastcgi_pass 127.0.0.1:31000;
+		fastcgi_pass_header  Set-Cookie;
+#proxy_ignore_headers Set-Cookie;
+#proxy_hide_header Set-Cookie;
+		fastcgi_cache_valid 200 302 15m;
+		fastcgi_cache_valid 301 1d;
+		fastcgi_cache_valid any 5m;
+#fastcgi_cache localhost;
+		fastcgi_cache_key "$host$uri $cookie_id";
+		fastcgi_cache_min_uses  1;
+		fastcgi_cache_use_stale error timeout invalid_header http_500;
+	}
+
+	location /mydb {
+		expires	10d;
+#internal;
+		alias /opt/data/station/filedb;
+	}
+
+	location /static {
+            root /opt/data/station;
+	}
+
+	location /static-data {
+            root /opt/data/station/static-data;
+	}
+}
