@@ -51,9 +51,11 @@ h1 span {
 img {
 	border-style: none;
 	display: block;
-	#-webkit-box-shadow: 3px 3px 6px #666; 
-	#-moz-box-shadow: 3px 3px 6px #666; 
-	#box-shadow: 3px 3px 6px #666;
+	/*
+	-webkit-box-shadow: 3px 3px 6px #666; 
+	-moz-box-shadow: 3px 3px 6px #666; 
+	box-shadow: 3px 3px 6px #666;
+	*/
 	opacity: 0.8;
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
@@ -86,7 +88,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 
 /**/
 #my-header {
-	background-color: #477ABD;
+	background-color: #3b89ba;
 	float: left;
 	width: 950px;
 	height: 100px;
@@ -501,7 +503,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 
 #my-footer {
 	margin-top: 8px;
-	background-color: #477ABD;
+	background-color: #3b89ba;
 	float: left;
 	width: 950px;
 	margin-bottom: 16px;
