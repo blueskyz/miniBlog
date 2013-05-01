@@ -1,12 +1,18 @@
 <%inherit file='base.html' />
 
+<%
+mapcategoryname = {}
+for item in categorys:
+	mapcategoryname[item['category_id']] = item['name']
+%>
+
 <%def name="category()">
 <h4>分类</h4>
 <ul id="blogcategory">
+% for item in categorys:
+<li><a href='/blog/${item["category_id"]}'>${item['name']}  (${item['count']})</a></li>
+% endfor
 </ul>
-<script type="text/javascript">
-	$(showBlogCategory);
-</script>
 </%def>
 
 <div class="simple-list">
@@ -20,11 +26,43 @@
 </script>
 
 <div class="simple-list">
-	<h1 id="blog-title"></h1>
+	<h1 id="blog-title">所有日志
+		<span class="morecontent">
+			<a href="/blog/0/">更多日志>></a>
+		</span>
+	</h1>
 	<ul id="blog-ul">
+		% for blog in blogs:
+		<li class="blog-li">
+		<div class="blog-item">
+			<div class="blog-head">
+				<a href="/blog/${blog['category_id']}/${blog['blogid']}">
+					${blog['title']}
+				</a>
+			</div>
+			<div class="blog-attrs">
+				<span class="blog-attr">${blog['published']}</span>
+				<span class="blog-attr">${blog['updated']}[U]</span>
+				<span class="categoryattr">
+					<a href="/blog/${blog['category_id']}/">${mapcategoryname[blog['category_id']]}</a>
+				</span>
+			% if mgrprivilege:
+			<span class="blog-attr">
+				<a href="/manage/blog/${blog['blogid']}">编辑</a>
+			</span>
+			% endif
+			</div>
+			<div class="blog-content">
+				${blog['summary']}
+			</div>
+		</div>
+		</li>
+		% endfor
 	</ul>
 </div>
 
+<%doc>
 <script type="text/javascript">
 	$(function(){showBlogList({categoryid: 0, page: 1, blogcount: ${blogcount}});});
 </script>
+</%doc>

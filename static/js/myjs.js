@@ -118,6 +118,7 @@ function getBlogCategory(usedata, useCategory)
 function showBlogCategory()
 {
 	getBlogCategory(null, function(usedata, categorylist){
+		/*
 			var curlis = "";
 			$.each(categorylist, function(id){
 				var curdata = categorylist[id];
@@ -126,6 +127,7 @@ function showBlogCategory()
 				curlis += curli;
 				});
 			$ ("#blogcategory").append($(curlis));
+			*/
 			var alist = $(".widget-side ul#blogcategory li a");
 			var pattern = /(^\/[^\/]*\/[0-9]+)/;
 			setLiSelected(pattern, alist, location.pathname);
@@ -161,7 +163,7 @@ function showBlogList(usedata)
 					"<div class='blog-head'>" +
 					"<a href='" + curcategory + 
 					curdata['blogid'] + "'>" + curdata['title'] + "</a></div>" +
-					"<div><span class='blog-attr'>" + curdata['published'] + "</span>" +
+					"<div class='blog-attrs'><span class='blog-attr'>" + curdata['published'] + "</span>" +
 					"<span class='blog-attr'>" + curdata['updated'] + "[U]</span>";
 					if(bEdit){
 						curli += "<span><a href='/manage/blog/" + curdata['blogid'] + 
@@ -196,7 +198,7 @@ function showBlogContent(categoryid, blogid, bEdit)
 					"<div class='blog-head'>" +
 					"<a href='" + curcategory + data['blogid'] + "'>" +
 					data['title'] + "</a></div>" +
-					"<div><span class='blog-attr'>" + data['published'] + "</span>" +
+					"<div class='blog-attrs'><span class='blog-attr'>" + data['published'] + "</span>" +
 					"<span class='blog-attr'>" + data['updated'] + "[U]</span>"; 
 					if (bEdit){
 					curli += "<span class='blog-attr'><a href='/manage/blog/" + data['blogid'] + "'>编辑</a></span>"; 

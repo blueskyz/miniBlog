@@ -4,45 +4,79 @@
 <link type="text/css" rel="stylesheet" href="/static/third/syntaxhighlighter/styles/shCoreDefault.css"/>
 </%def>
 
+<%
+mapcategoryname = {}
+for item in categorys:
+	mapcategoryname[item['category_id']] = item['name']
+%>
+
 <%def name="category()">
 <h4>分类</h4>
 <ul id="blogcategory">
+% for item in categorys:
+<li>
+<a href='/blog/${item["category_id"]}'>${item['name']}  (${item['count']})</a>
+</li>
+% endfor
 </ul>
+</%def>
+
 <script type="text/javascript">
 	$(function(){showBlogCategory();});
 </script>
-</%def>
 
 <div class="simple-list">
-	<h1 id="blog-title"></h1>
-	<ul id="blog-ul"></ul>
+	<h1 id="blog-title">${mapcategoryname[int(categoryid)]}</h1>
+	<ul id="blog-ul">
+		% for blog in blogs:
+		<li class="blog-li">
+		<div class="blog-item">
+			<div class="blog-head">
+				<a href="/blog/${blog['category_id']}/${blog['blogid']}">
+					${blog['title']}
+				</a>
+			</div>
+			<div class="blog-attrs">
+				<span class="blog-attr">${blog['published']}</span>
+				<span class="blog-attr">${blog['updated']}[U]</span>
+				<span class="categoryattr">
+					<a href="/blog/${blog['category_id']}/">${mapcategoryname[blog['category_id']]}</a>
+				</span>
+			% if mgrprivilege:
+			<span class="blog-attr">
+				<a href="/manage/blog/${blog['blogid']}">编辑</a>
+			</span>
+			% endif
+			</div>
+			<div class="blog-content">
+			% if blogid:
+				${blog['content']}
+			% else:
+				${blog['summary']}
+			% endif
+			</div>
+		</div>
+		</li>
+		% endfor
+	</ul>
 </div>
-<div class="splitpagediv"><ul class="splitpage"></ul></div>
+% if not blogid:
+<div class="splitpagediv">
+	<ul class="splitpage">
+		% for i in range(1, pagecount+1):
+		% if pageidx == i:
+		<li class="selectpage" index="${i}">${i}</li>
+		% else:
+		<li class="pageindex" index="${i}">
+		<a href="/blog/${categoryid}/${i}/${pagesize}">${i}</a>
+		</li>
+		% endif
+		% endfor
+	</ul>
+</div>
+% endif
 
 <script type="text/javascript" src="/static/third/syntaxhighlighter/scripts/shCore.js"></script>
 <script type="text/javascript" src="/static/third/syntaxhighlighter/scripts/shBrushCpp.js"></script>
 <script type="text/javascript">SyntaxHighlighter.all();</script>
 
-<script type="text/javascript">
-	$(function(){
-			% if mgrprivilege:
-			var bEdit = true;
-			% else:
-			var bEdit = false;
-			% endif
-
-			var categoryidval = 0;
-			% if categoryid:
-			categoryidval = ${categoryid};
-			% endif
-
-			% if blogid:
-			showBlogContent(categoryidval, ${blogid}, bEdit);
-			% else:
-			var categoryurl = "/rest/blog/category/" + categoryidval + "/";
-			splitpage(categoryurl + "count", categoryurl, 1, ${blogcount}, 6, 
-				{categoryid: categoryidval, page: 1, blogcount: ${blogcount}, bEdit: bEdit}, 
-				showBlogList);
-			% endif
-			});
-</script>

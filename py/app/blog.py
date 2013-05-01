@@ -7,15 +7,10 @@ import json
 import web
 
 import config
+import myutil
 
-db = web.database(dbn='mysql', 
-		user='webadmin', 
-		pw='webadmin791127', 
-		host='localhost', 
-		db='myblog')
-
-def privilege():
-	return web.config["_session"].privilege
+db = myutil.db
+privilege = myutil.privilege
 
 class reblog:
 	def GET(self): raise web.seeother('/')
@@ -30,17 +25,16 @@ class count:
 						"from category_link left outer join blog "
 						"on blog.blog_id = category_link.blog_id "
 						"where blog.privilege <= %d and "
-						"category_link.category_id = %s;") %(privilege(), categoryid)
+						"category_link.category_id = %d;") \
+				%(privilege(), int(categoryid))
 			curset = db.query(query)
-			web.header("content-type", "application/json")
 			return json.dumps({'count': curset[0]["total"]}, ensure_ascii=False)
 		except Exception, err:
 			web.BadRequest()
-			web.header("content-type", "application/json")
 			return '{"desc": "%s", "sql:" "%s"}' % (err, query)
 
 class bloglist:
-	def GET(self, categoryid, pageindex=1, count=8):
+	def GET(self, categoryid=0, pageindex=1, count=8):
 		if int(categoryid) == 0:
 			return self.__all__(categoryid, pageindex, count)
 		else:
@@ -73,11 +67,9 @@ class bloglist:
 				if item["category_id"] is not None:
 					blogitem["category_id"] = item["category_id"]
 				bloglist.append(blogitem)
-			web.header("content-type", "application/json")
 			return json.dumps(bloglist, ensure_ascii=False)
 		except Exception, err:
 			web.BadRequest()
-			web.header("content-type", "application/json")
 			return '{"desc": "%s"}' % (err)
 
 	def __gettype__(self, categoryid, pageindex=1, count=8):
@@ -94,6 +86,7 @@ class bloglist:
 					what=what, where=curwhere, order=order, 
 					limit="%d, %d" % (start,offset)).list()
 			bloglist = []
+			categoryid = int(categoryid)
 			for item in curlist:
 				blogitem = {}
 				blogitem["blogid"] = item["blog_id"]
@@ -105,11 +98,9 @@ class bloglist:
 						time.localtime(item["updated"]))
 				blogitem["category_id"] = categoryid
 				bloglist.append(blogitem)
-			web.header("content-type", "application/json")
 			return json.dumps(bloglist, ensure_ascii=False)
 		except Exception, err:
 			web.BadRequest()
-			web.header("content-type", "application/json")
 			return '{"desc": "%s"}' % (err)
 
 
@@ -142,12 +133,9 @@ class category:
 				category["description"] = item["description"]
 				category["count"] = item["count"]
 				categorylist.append(category)
-			web.header("content-type", "application/json")
 			return json.dumps(categorylist, ensure_ascii=False)
 		except Exception, err:
 			web.BadRequest()
-			web.header("content-type", "application/json")
-			#return '{"desc": "%s", "sql:" "%s"}' % (err, query)
 			return '{"desc": "%s"}' % (err)
 
 	def POST(self):
@@ -155,7 +143,6 @@ class category:
 			pass
 		except Exception, err:
 			web.BadRequest()
-			web.header("content-type", "application/json")
 			return '{"desc": "%s"}' % (err)
 
 
@@ -175,6 +162,7 @@ class blog:
 			if len(curlist) != 1:
 				raise Exception("find blog is not one.[%d]" % (len(curlist)))
 			item = curlist[0]
+			bloglist = []
 			blogitem = {}
 			blogitem["blogid"] = item["blog_id"]
 			blogitem["title"] = item["title"]
@@ -188,11 +176,10 @@ class blog:
 			blogitem["category_id"] = 0
 			if item["category_id"] is not None:
 				blogitem["category_id"] = item["category_id"]
-			web.header("content-type", "application/json")
-			return json.dumps(blogitem, ensure_ascii=False)
+			bloglist.append(blogitem)
+			return json.dumps(bloglist, ensure_ascii=False)
 		except Exception, err:
 			web.BadRequest()
-			web.header("content-type", "application/json")
 			return '{"desc": "%s"}' % (err)
 
 	def POST(self, blogid):
@@ -229,11 +216,9 @@ class blog:
 			elif data["action"] == "delete":
 				db.delete("blog", where="blog_id=" + blogid)
 				db.delete("category_link", where="blog_id=" + blogid)
-			web.header("content-type", "application/json")
 			return json.dumps({'desc': 'success'})
 		except Exception, err:
 			web.BadRequest()
-			web.header("content-type", "application/json")
 			return '{"desc": "%s"}' % (err)
 
 urls = (# rest router

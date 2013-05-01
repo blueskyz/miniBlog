@@ -12,14 +12,12 @@ import web
 import cgi
 
 import config
+import myutil
 
 cgi.maxlen = 10 * 1024 * 1024 # 10MB
 
-db = web.database(dbn='mysql', 
-		user='webadmin', 
-		pw='webadmin791127', 
-		host='localhost', 
-		db='myblog')
+db = myutil.db
+privilege = myutil.privilege
 
 # The EXIF tag that holds orientation data.
 EXIF_ORIENTATION_TAG = 274
@@ -36,9 +34,6 @@ ORIENTATIONS = {
 		7: ("Mirrored along top-right diagonal", 0),
 		8: ("Rotated 270 degrees", -270)
 		}
-
-def privilege():
-	return web.config["_session"].privilege
 
 class rephoto:
 	def GET(self): raise web.seeother('/')

@@ -10,17 +10,13 @@ import web
 import cgi
 
 import config
+import myutil
 
 cgi.maxlen = 100 * 1024 * 1024 # 100MB
 
-db = web.database(dbn='mysql', 
-		user='webadmin', 
-		pw='webadmin791127', 
-		host='localhost', 
-		db='myblog')
+db = myutil.db
+privilege = myutil.privilege
 
-def privilege():
-	return web.config["_session"].privilege
 
 class reres:
 	def GET(self): raise web.seeother('/')

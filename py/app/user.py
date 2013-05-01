@@ -7,14 +7,11 @@ import json
 import hashlib
 import authpicture as pic 
 
-db = web.database(dbn='mysql', 
-		user='webadmin', 
-		pw='webadmin791127', 
-		host='localhost', 
-		db='myblog')
+import config
+import myutil
 
-def privilege():
-	return web.config["_session"].privilege
+db = myutil.db
+privilege = myutil.privilege
 
 class login:
 	def GET(self):
@@ -22,7 +19,7 @@ class login:
 
 	def POST(self):
 		try:
-			session = web.config["_session"]
+			session = myutil.session()
 			data = json.loads(web.data())
 			if session.authcode != data["authstr"]:
 				raise Exception("验证码错误:" + session.authcode)
@@ -43,26 +40,21 @@ class login:
 				raise Exception("用户名错误")
 			return '{"desc": "error"}'
 		except Exception, err:
-			authcode = pic.picChecker().getPicString()
-			web.config["_session"].authcode = authcode
+			myutil.session().authcode = pic.picChecker().getPicString()
 			web.BadRequest()
 			web.header("content-type", "application/json")
 			return '{"desc": "%s"}' % (err)
 
 class logout:
 	def GET(self):
-		web.config["_session"].privilege = -1
-		web.config["_session"].kill()
+		myutil.session().privilege = -1
+		myutil.session().kill()
 		web.setcookie("id", "")
 		web.header("content-type", "application/json")
 		return '{"desc": "success"}'
 
 	def POST(self):
-		web.config["_session"].privilege = -1
-		web.config["_session"].kill()
-		web.setcookie("id", "")
-		web.header("content-type", "application/json")
-		return '{"desc": "success"}'
+		return self.GET()
 
 class user:
 	def GET(self, userid=None):
@@ -128,7 +120,7 @@ class authpicture:
 	def GET(self, seconds):
 		picture = pic.picChecker() 
 		data = picture.createChecker()   
-		web.config["_session"].authcode = data["str"] 
+		myutil.session().authcode = data["str"] 
 		web.header('content-type', "image/png")
 		return data["image"].getvalue()
 
@@ -139,5 +131,5 @@ urls = ("/login", "login",
 		"/authpicture/([1-9][0-9]{9})/?", "authpicture",
 		"", "error")
 
-app_user = web.application(urls, globals(), autoreload=False)
+app_user = web.application(urls, globals(), autoreload=config.autoreload)
 

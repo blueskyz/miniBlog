@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
+import json
 import web
 
 import config
-
 
 # disable debug
 web.config.debug=config.debug
@@ -14,7 +18,8 @@ import app.photo as appphoto
 import app.blog as appblog
 import app.user as appuser
 
-from myutil import render
+import myutil
+from myutil import render, mylog
 import app.authpicture as pic
 
 # url map
@@ -26,7 +31,8 @@ urls = (# rest
 		# page
 		"/photo/?", "photo",
 		"/login/?", "login",
-		"/blog/?([0-9]{1,2}){0,1}/?([1-9][0-9]{9}){0,1}/?", "blog",
+		"/blog/([0-9]{1,2}){1}/([1-9][0-9]{9}){1}/?", "blog",
+		"/blog/?([0-9]{1,2}){0,1}/?([1-9][0-9]{0,1}){0,1}/?([1-9][0-9]{0,1}){0,1}/?", "bloglist",
 		# mgr page
 		"/manage/blog/?([1-9][0-9]{9}){0,1}/?", "mgrblog",
 		"/manage/photo/?([1-9][0-9]{9}){0,1}/?", "mgrphoto",
@@ -35,46 +41,53 @@ urls = (# rest
 
 app = web.application(urls, globals(), autoreload=config.autoreload)
 
+web.config.session_parameters['cookie_path'] = '/'
 web.config.session_parameters['timeout'] = 3600 
 web.config.session_parameters['ignore_expiry'] = False
 
-import myutil
-
 def createsession():
-	if web.config.get('_session'):
-		return web.config._session
-	sqlitedb = web.database(dbn='mysql', 
-			user='webadmin', 
-			pw='webadmin791127', 
-			host='localhost', 
-			db='myblog')
+	print 'createsession'
+	db = myutil.db
+	if db is None:
+		print 'db error'
 
-	sessiondb = web.session.DBStore(sqlitedb, 'sessions')
+	sessiondb = web.session.DBStore(db, 'sessions')
 	session = web.session.Session(app, sessiondb,
 			initializer={"privilege": -1, 
 				"authcode": pic.picChecker().getPicString()})
-	web.config["_session"] = session
+	def session_hook():
+		web.ctx.session = session
+	app.add_processor(web.loadhook(session_hook))
 
-createsession()
+def createprocessor():
+	createsession()
+	def pre_hook():
+		mylog.loginfo()
+	app.add_processor(web.loadhook(pre_hook))
+	def post_hook():
+		if web.ctx.fullpath[0:6] == "/rest/":
+			web.header("content-type", "application/json")
+	app.add_processor(web.unloadhook(post_hook))
 
-#sqlitedb = web.database(dbn="sqlite", db="sessions/sessions.dat")
-#sessiondb = web.session.DBStore(sqlitedb, 'sessions')
-#session = web.session.Session(app, sessiondb,
-#		initializer={"privilege": -1, 
-#			"authcode": pic.picChecker().getPicString()})
-#web.config["_session"] = session
+createprocessor()
 
 def islogin():
-	return web.config["_session"].privilege >= 0
+	mylog.loginfo(web.ctx.session.authcode)
+	return web.ctx.session.privilege >= 0
 
 def mgrprivilege():
-	return web.config["_session"].privilege >= 1
+	return web.ctx.session.privilege >= 1
+
 
 # main page
 class myweb:
 	def GET(self, cururl):
+		categorys = json.loads(appblog.category().GET())
+		blogs = json.loads(appblog.bloglist().GET(0, 1, 40))
 		return render.index(login=islogin(), mgrprivilege=mgrprivilege(), 
-				photocount=8, blogcount=15)
+				photocount=8, blogcount=15, 
+				categorys=categorys,
+				blogs=blogs)
 
 # login page
 class login:
@@ -90,8 +103,41 @@ class photo:
 # blog page
 class blog:
 	def GET(self, categoryid=None, blogid=None):
-		return render.blogview(login=islogin(), mgrprivilege=mgrprivilege(),
-				blogcount=30, categoryid=categoryid, blogid=blogid)
+		categorys = json.loads(appblog.category().GET())
+		blogs = json.loads(appblog.blog().GET(blogid))
+		return render.blogview(login=islogin(), 
+				mgrprivilege=mgrprivilege(),
+				blogid=blogid, 
+				categoryid=categoryid,
+				categorys=categorys, 
+				blogs=blogs)
+
+# blog list
+class bloglist:
+	def GET(self, categoryid=None, pageidx='1', pagesize='8'):
+		if pageidx is None: pageidx = 1
+		else: pageidx = int(pageidx)
+		if pagesize is None: pagesize = 40
+		else: pagesize = int(pagesize)
+		if pagesize > 100: pagesize = 40
+		print pageidx, pagesize
+		categorys = json.loads(appblog.category().GET())
+		count = json.loads(appblog.count().GET(categoryid))['count']
+		pagecount = count / pagesize + 1
+		if count % pagesize == 0:
+			pagecount = pagecount - 1
+		if pagecount < pageidx:
+			pageidx = 1
+		blogs = json.loads(appblog.bloglist().GET(categoryid, pageidx, pagesize))
+		return render.blogview(login=islogin(), 
+				mgrprivilege=mgrprivilege(),
+				blogid=None, 
+				categoryid=categoryid, 
+				categorys=categorys, 
+				blogs=blogs,
+				pagecount=pagecount,
+				pageidx=pageidx,
+				pagesize=pagesize)
 
 # manage blog page
 class mgrblog:
@@ -114,5 +160,6 @@ class mgruser:
 
 if __name__ == "__main__":
 	web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
-	app.run()
+	print 'start run web server'
+	app.run(mylog)
 
