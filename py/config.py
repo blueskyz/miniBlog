@@ -7,7 +7,7 @@ import logging
 # format char
 fmt_c = '********'
 
-debug = True
+debug = False
 autoreload = False
 
 # database
@@ -41,7 +41,7 @@ print 'log_format', log_format
 print ''
 
 # file db path
-filedb = "/opt/data/station/filedb/"
+filedb = "/data/station/filedb/"
 print fmt_c, 'other set', fmt_c
 print 'filedb', filedb
 

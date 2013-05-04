@@ -37,6 +37,7 @@
 	</div>
 </div>
 
+<%def name='loadjs()'>
 % if mgrprivilege:
 <script type="text/javascript" src="/static/third/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
@@ -48,6 +49,6 @@
 
 	$(initmgrblog);
 </script>
-
 % endif
+</%def>
 

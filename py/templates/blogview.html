@@ -3,6 +3,11 @@
 <%def name="loadcss()">
 <link type="text/css" rel="stylesheet" href="/static/third/syntaxhighlighter/styles/shCoreDefault.css"/>
 </%def>
+<%def name='loadjs()'>
+<script type="text/javascript" src="/static/third/syntaxhighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="/static/third/syntaxhighlighter/scripts/shBrushCpp.js"></script>
+<script type="text/javascript">SyntaxHighlighter.all();</script>
+</%def>
 
 <%
 mapcategoryname = {}
@@ -14,16 +19,16 @@ for item in categorys:
 <h4>分类</h4>
 <ul id="blogcategory">
 % for item in categorys:
+% if item['category_id'] == int(categoryid):
+<li class="selected">
+% else:
 <li>
+% endif
 <a href='/blog/${item["category_id"]}'>${item['name']}  (${item['count']})</a>
 </li>
 % endfor
 </ul>
 </%def>
-
-<script type="text/javascript">
-	$(function(){showBlogCategory();});
-</script>
 
 <div class="simple-list">
 	<h1 id="blog-title">${mapcategoryname[int(categoryid)]}</h1>
@@ -75,8 +80,4 @@ for item in categorys:
 	</ul>
 </div>
 % endif
-
-<script type="text/javascript" src="/static/third/syntaxhighlighter/scripts/shCore.js"></script>
-<script type="text/javascript" src="/static/third/syntaxhighlighter/scripts/shBrushCpp.js"></script>
-<script type="text/javascript">SyntaxHighlighter.all();</script>
 

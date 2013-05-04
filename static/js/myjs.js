@@ -117,8 +117,11 @@ function getBlogCategory(usedata, useCategory)
 
 function showBlogCategory()
 {
-	getBlogCategory(null, function(usedata, categorylist){
+	var alist = $(".widget-side ul#blogcategory li a");
+	var pattern = /(^\/[^\/]*\/[0-9]+)/;
+	setLiSelected(pattern, alist, location.pathname);
 		/*
+	getBlogCategory(null, function(usedata, categorylist){
 			var curlis = "";
 			$.each(categorylist, function(id){
 				var curdata = categorylist[id];
@@ -127,11 +130,11 @@ function showBlogCategory()
 				curlis += curli;
 				});
 			$ ("#blogcategory").append($(curlis));
-			*/
 			var alist = $(".widget-side ul#blogcategory li a");
 			var pattern = /(^\/[^\/]*\/[0-9]+)/;
 			setLiSelected(pattern, alist, location.pathname);
 			});
+			*/
 }
 
 function showBlogList(usedata)
@@ -375,6 +378,7 @@ function setneworedit()
 	if (blogid){
 		url += blogid;
 		$ .getJSON(url, function(data){
+				data = data[0]
 				$(".blogform label[name='id']").text(blogid);
 				$(".blogform input[name='title']").val(data["title"]);
 				tinyMCE.activeEditor.setContent(data["content"]);

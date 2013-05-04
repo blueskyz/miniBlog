@@ -59,6 +59,7 @@
 	</div>
 </div>
 
+<%def name='loadjs()'>
 % if mgrprivilege:
 <script type="text/javascript">
 $(function(){
@@ -73,6 +74,7 @@ $(function(){
 
 </script>
 % endif
+</%def>
 
 <%def name="navmgrtype()">user</%def>
 

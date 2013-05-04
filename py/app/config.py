@@ -4,4 +4,4 @@
 debug = False
 autoreload = False
 
-filedb = "/opt/data/station/filedb/"
+filedb = "/data/station/filedb/"

@@ -189,6 +189,7 @@ class blog:
 			selset = db.select("blog", where="blog_id=$blogid", 
 					vars=locals(), what="blog_id").list()
 			data = json.loads(web.data())
+			#print str(data)
 			if len(selset)==0:
 				db.insert("blog", blog_id=int(blogid), title=data["title"], 
 						summary=data["summary"], updated=int(blogid), 

@@ -8,35 +8,37 @@
 		<link type="text/css" href="/static/css/my.css" rel="Stylesheet" />
 		<link href="/static/css/demo1/style.css" media="screen" title="shadow" rel="stylesheet" type="text/css" />
 		${self.loadcss()}
-		<script type="text/javascript" src="/static/js/jquery.js"></script>
-		<script type="text/javascript" src="/static/js/pirobox.js"></script>
-		<script type="text/javascript" src="/static/js/myjs.js"></script>
 	</head>
 
-	<%def name="loadcss()">
-	</%def>
+<%
+menus = []
+menus.append(('/', '<a href="/">首页</a>'))
+menus.append(('/blog', '<a href="/blog/0">日志</a>'))
+menus.append(('/photo', '<a href="/photo">相册</a>'))
+menus.append(('/resource', '<a href="/resource">资源</a>'))
+if mgrprivilege:
+	menus.append(('/manage', '<a href="/manage/blog">管理</a>'))
+if login:
+	menus.append(('/logout', '<a id="logout" onclick="logoutclick();" href="/login">退出</a>'))
+else:
+	menus.append(('/login', '<a href="/login">登录</a>'))
+%>
+<%doc>
+menus.append('<a href="/about">关于</a>')
+</%doc>
 
 	<body id="my-interior">
-
 		<div id="my-header">
 			<a id="my-navigation-home" href="/"></a>
 			<div id="my-navigation">
 				<ul>
-					<li><a href="/">首页</a></li>
-					<li><a href="/blog/0">日志</a></li>
-					<li><a href="/photo">相册</a></li>
-					<li><a href="/resource">资源</a></li>
-					% if mgrprivilege:
-					<li><a href="/manage/blog">管理</a></li>
-					% endif
-					% if login:
-					<li><a id="logout" onclick="logoutclick();" href="/login">退出</a></li>
+					% for menu in menus:
+					% if menu[0] == menuname:
+					<li class='selected'>${menu[1]}</li>
 					% else:
-					<li><a href="/login">登录</a></li>
+					<li>${menu[1]}</li>
 					% endif
-					<!--
-					<li><a href="/about">关于</a></li>
-					-->
+					% endfor
 				</ul>
 			</div>
 		</div>
@@ -63,8 +65,14 @@
 			<p><span>&copy;2010 www.hopez.org, all rights reserved</span></p>
 		</div>
 	</body>
-	<script type="text/javascript">
-		$(setmenu);
-		</script>
+	<script type="text/javascript" src="/static/js/jquery.js"></script>
+	<script type="text/javascript" src="/static/js/pirobox.js"></script>
+	<script type="text/javascript" src="/static/js/myjs.js"></script>
+	${self.loadjs()}
 	</html>
+
+	<%def name='loadcss()'>
+	</%def>
+	<%def name='loadjs()'>
+	</%def>
 

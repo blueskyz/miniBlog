@@ -65,8 +65,10 @@ def createprocessor():
 		mylog.loginfo()
 	app.add_processor(web.loadhook(pre_hook))
 	def post_hook():
-		if web.ctx.fullpath[0:6] == "/rest/":
+		if web.ctx.fullpath[0:6] == "/rest/" and web.ctx.fullpath[6:11] != "photo":
 			web.header("content-type", "application/json")
+		else:
+			web.header("content-type", "text/html; charset=utf-8")
 	app.add_processor(web.unloadhook(post_hook))
 
 createprocessor()
@@ -84,20 +86,27 @@ class myweb:
 	def GET(self, cururl):
 		categorys = json.loads(appblog.category().GET())
 		blogs = json.loads(appblog.bloglist().GET(0, 1, 40))
-		return render.index(login=islogin(), mgrprivilege=mgrprivilege(), 
-				photocount=8, blogcount=15, 
+		return render.index(menuname = '/', 
+				login=islogin(), 
+				mgrprivilege=mgrprivilege(), 
+				photocount=8, 
+				blogcount=15, 
 				categorys=categorys,
 				blogs=blogs)
 
 # login page
 class login:
 	def GET(self):
-		return render.loginview(login=islogin(), mgrprivilege=mgrprivilege())
+		return render.loginview(menuname = '/login',
+				login=islogin(), 
+				mgrprivilege=mgrprivilege())
 
 # photo page
 class photo:
 	def GET(self):
-		return render.photoview(login=islogin(), mgrprivilege=mgrprivilege(), 
+		return render.photoview(menuname='/photo',
+				login=islogin(), 
+				mgrprivilege=mgrprivilege(), 
 				photocount=40)
 
 # blog page
@@ -105,7 +114,9 @@ class blog:
 	def GET(self, categoryid=None, blogid=None):
 		categorys = json.loads(appblog.category().GET())
 		blogs = json.loads(appblog.blog().GET(blogid))
-		return render.blogview(login=islogin(), 
+		mylog.loginfo(appblog.blog())
+		return render.blogview(menuname='/blog',
+				login=islogin(), 
 				mgrprivilege=mgrprivilege(),
 				blogid=blogid, 
 				categoryid=categoryid,
@@ -129,7 +140,9 @@ class bloglist:
 		if pagecount < pageidx:
 			pageidx = 1
 		blogs = json.loads(appblog.bloglist().GET(categoryid, pageidx, pagesize))
-		return render.blogview(login=islogin(), 
+		mylog.loginfo(appblog.bloglist().GET(categoryid,pageidx,pagesize))
+		return render.blogview(menuname='/blog',
+				login=islogin(), 
 				mgrprivilege=mgrprivilege(),
 				blogid=None, 
 				categoryid=categoryid, 
@@ -142,24 +155,33 @@ class bloglist:
 # manage blog page
 class mgrblog:
 	def GET(self, blogid=None):
-		return render.mgrblogview(login=islogin(), mgrprivilege=mgrprivilege(), 
+		return render.mgrblogview(menuname='/manage',
+				curmgrtype='/blog',
+				login=islogin(), 
+				mgrprivilege=mgrprivilege(), 
 				blogid=blogid)
 
 # manage photo page
 class mgrphoto:
 	def GET(self, photoid=None):
-		return render.mgrphotoview(login=islogin(), mgrprivilege=mgrprivilege(), 
+		return render.mgrphotoview(menuname='/manage',
+				curmgrtype='/photo',
+				login=islogin(), 
+				mgrprivilege=mgrprivilege(), 
 				photoid=photoid)
 
 # manage user page
 class mgruser:
 	def GET(self, userid=None):
-		return render.mgruserview(login=islogin(), mgrprivilege=mgrprivilege(),
+		return render.mgruserview(menuname='/manage',
+				curmgrtype='/user',
+				login=islogin(), 
+				mgrprivilege=mgrprivilege(),
 				userid=userid)
 
 
 if __name__ == "__main__":
-	web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
+	#web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
 	print 'start run web server'
 	app.run(mylog)
 

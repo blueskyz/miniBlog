@@ -37,6 +37,7 @@
 	</div>
 </div>
 
+<%def name='loadjs()'>
 % if mgrprivilege:
 <script type="text/javascript" src="/static/js/client.js"></script>
 <script type="text/javascript">
@@ -49,8 +50,9 @@
 			% endif
 			mgrPhotoAction(url, photoid);
 			});
-		</script>
-		% endif
+</script>
+% endif
+</%def>
 
 <%def name="navmgrtype()">photo</%def>
 

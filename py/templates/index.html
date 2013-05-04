@@ -21,10 +21,6 @@ for item in categorys:
 	</ul>
 </div>
 
-<script type="text/javascript">
-	$(function(){showphotoN(${photocount});});
-</script>
-
 <div class="simple-list">
 	<h1 id="blog-title">所有日志
 		<span class="morecontent">
@@ -61,8 +57,9 @@ for item in categorys:
 	</ul>
 </div>
 
-<%doc>
+<%def name='loadjs()'>
 <script type="text/javascript">
-	$(function(){showBlogList({categoryid: 0, page: 1, blogcount: ${blogcount}});});
+	$(function(){showphotoN(${photocount});});
 </script>
-</%doc>
+</%def>
+

@@ -1,14 +1,35 @@
 <%inherit file='base.html' />
 
+<%def name="errPrivilege()">
+<span class="errContent">权限不够，请登录</span>
+</%def>
+
 <%def name="category()">
+<%
+mgrcategory = [('/blog', '<a href="/manage/blog/">日志管理</a>'), 
+('/photo', '<a href="/manage/photo/">相片管理</a>'), 
+('/user', '<a href="/manage/user/">用户管理</a>'), 
+('/resource', '<a href="/manage/resource/">资源管理</a>')]
+%>
 <h4>分类</h4>
 <ul id="mgrcategory">
+	% for mgr in mgrcategory:
+	% if mgr[0] == curmgrtype:
+	<li class='selected'>${mgr[1]}</li>
+	% else:
+	<li>${mgr[1]}</li>
+	% endif
+	% endfor
+	<%doc>
 	<li><a href="/manage/blog/">日志管理</a></li>
 	<li><a href="/manage/photo/">相片管理</a></li>
 	<li><a href="/manage/user/">用户管理</a></li>
 	<li><a href="/manage/resource/">资源管理</a></li>
+	</%doc>
 </ul>
+</%def>
 
+<%def name='loadjs()'>
 <script type="text/javascript">
 $(function(){
 		var alist = $(".widget-side ul#mgrcategory li a");
@@ -16,8 +37,4 @@ $(function(){
 		setLiSelected(pattern, alist, location.pathname);
 		});
 </script>
-</%def>
-
-<%def name="errPrivilege()">
-<span class="errContent">权限不够，请登录</span>
 </%def>
