@@ -6,12 +6,20 @@
 		% if mgrprivilege:
 		<div class="blogform">
 			<form action="" method="post">
-				<div><label>id:</label><label name="id"></label></div>
-				<div><label>标题:</label></div>
-				<div><input type="text" name="title" value="" /></div>
-				<div><label>内容:</label></div>
-				<div><textarea name="content" rows="30" cols="80" ></textarea></div>
-				<div id="privilege">
+				<div class="form-item">
+					<label>id:</label><label name="id"></label>
+				</div>
+				<div class="form-item">
+					<label>标题:</label>
+					<input type="text" name="title" value="" />
+				</div>
+				<div class="form-item">
+					<label>内容:</label>
+				</div>
+				<div class="form-item">
+					<textarea name="content" rows="30" cols="80" ></textarea>
+				</div>
+				<div class="form-item" id="privilege">
 					<label>权限：</label>
 					<select>
 						<option value="-1">匿名可读</option>
@@ -20,7 +28,7 @@
 						<option value="2">管理员读写</option>
 					</select>
 				</div>
-				<div id="blogcategory">
+				<div class="form-item" id="blogcategory">
 					<label>分类：</label>
 					<select>
 					</select>
