@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -16,6 +17,7 @@ web.config.debug=config.debug
 # model control
 import app.photo as appphoto
 import app.blog as appblog
+import app.resource as appres
 import app.user as appuser
 
 import myutil
@@ -27,6 +29,7 @@ urls = (# rest
 		# photo app
 		"/rest/photo", appphoto.app_photo,
 		"/rest/blog", appblog.app_blog,
+		"/rest/resource", appres.app_resource,
 		"/rest/user", appuser.app_user,
 		# page
 		"/photo/?", "photo",
@@ -43,7 +46,7 @@ app = web.application(urls, globals(), autoreload=config.autoreload)
 
 web.config.session_parameters['cookie_path'] = '/'
 web.config.session_parameters['timeout'] = 3600 
-web.config.session_parameters['ignore_expiry'] = False
+web.config.session_parameters['ignore_expiry'] = True
 
 def createsession():
 	print 'createsession'
@@ -65,7 +68,9 @@ def createprocessor():
 		mylog.loginfo()
 	app.add_processor(web.loadhook(pre_hook))
 	def post_hook():
-		if web.ctx.fullpath[0:6] == "/rest/" and web.ctx.fullpath[6:11] != "photo":
+		if web.ctx.fullpath[0:6] == "/rest/" \
+				and web.ctx.fullpath[6:14] != "resource" \
+				and web.ctx.fullpath[6:11] != "photo":
 			web.header("content-type", "application/json")
 		else:
 			web.header("content-type", "text/html; charset=utf-8")
@@ -152,6 +157,20 @@ class bloglist:
 				pageidx=pageidx,
 				pagesize=pagesize)
 
+# resource page
+class resource:
+	def GET(self, categoryid=None, blogid=None):
+		categorys = json.loads(appres.category().GET())
+		blogs = json.loads(appblog.blog().GET(blogid))
+		mylog.loginfo(appblog.blog())
+		return render.blogview(menuname='/blog',
+				login=islogin(), 
+				mgrprivilege=mgrprivilege(),
+				blogid=blogid, 
+				categoryid=categoryid,
+				categorys=categorys, 
+				blogs=blogs)
+
 # manage blog page
 class mgrblog:
 	def GET(self, blogid=None):
@@ -181,7 +200,7 @@ class mgruser:
 
 
 if __name__ == "__main__":
-	#web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
+	web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
 	print 'start run web server'
 	app.run(mylog)
 

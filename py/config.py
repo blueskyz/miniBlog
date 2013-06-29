@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
+import os
 import web
 import logging
 
@@ -25,7 +26,7 @@ print 'dbname=', dbname
 print ''
 
 # log
-log_file= '/var/log/myblog/myblog.log'
+log_file= '/var/log/myblog/myblog.%d.log' % (os.getpid())
 log_interval = 10
 log_backups = 10
 log_format = '%(levelname)s %(process)d %(message)s'
@@ -41,7 +42,7 @@ print 'log_format', log_format
 print ''
 
 # file db path
-filedb = "/data/station/filedb/"
+filedb = "/opt/data/station/filedb/"
 print fmt_c, 'other set', fmt_c
 print 'filedb', filedb
 

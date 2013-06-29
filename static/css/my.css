@@ -3,8 +3,11 @@
  *
  */
 
+body {
+    font-family: Arial;
+}
 
-body, ul, ol, dl, td, th, caption, pre, p, blockquote, input, textarea, table {
+ul, ol, dl, td, th, caption, pre, p, blockquote, input, textarea, table {
     color: #333333;
     font-family: Arial;
     /* line-height: 150%; */
@@ -66,18 +69,19 @@ img {
 body {
 	background-attachment: scroll;
 	overflow-y: scroll;
-    background-clip: border-box;
-	/* background: #f2f1e7 url("/static/image/back.png"); */
+	/* 
+	 background: #f2f1e7 url("/static/image/back.png");
+	 background-repeat: repeat-x;
+	 background-position: 0 0;
+	 background-clip: border-box;
+	 background-origin: padding-box;
+	 background-size: auto auto;
+	 */
 	background: #E5ECCA;
-	background-repeat: repeat-x;
-	background-origin: padding-box;
-	background-position: 0 0;
-	background-size: auto auto;
 	margin: 0px;
 }
 
 input[type="text"], input[type="password"], textarea{
-	float: left;
 	padding: 8px;
 	margin-top: 5px;
 	margin-bottom: 15px;
@@ -98,16 +102,25 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 	width: 950px;
 	min-height: 800px;
 }
+#my-siteContain:after {
+	content: ".";
+	height: 0;
+	visibility: hidden;
+	display: block;
+	clear: both;
+}
 
 /**/
 #my-header {
-	/* background-color: #3b89ba; #2D2D2D*/
+	/* 
+	 background-color: #3b89ba; #2D2D2D;
+	 float: left;
+	 background-repeat: no-repeat;
+	 background-position: left top;
+	 */
 	background-color: #6aa;
-	float: left;
 	width: 100%;
 	height: 80px;
-	background-repeat: no-repeat;
-	background-position: left top;
 	opacity: 1.0;
 	/*
 	width: 950px;
@@ -227,6 +240,14 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 	height: 100px;
 }
 
+.simple-list:after {
+	content: ".";
+	height: 0;
+	visibility: hidden;
+	display: block;
+	clear: both;
+}
+
 .simple-list h1 {
 	padding-left: 10px;
 	padding-top: 16px;
@@ -288,7 +309,6 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 }
 
 #submit, #new, #delete{
-	float: left;
 	width: auto;
 	margin-right: 10px;
 }
@@ -475,25 +495,24 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 }
 
 #login-info{
-	float: left;
 	width: 100%;
 	border-top: 1px dashed #3B89BA;
 }
 
 #login-form{
-	float: left;
 	/* background: #f0efec; */
-	margin: 10px;
+	margin: auto;
 	padding: 20px;
 	width: 300px;
 }
 
 #login-form label, .login-item{
-	float: left;
+	display: block;
 	width: 100%;
 }
 
 #login-form input[type='button']{
+	display: block;
 	width: 100%;
 }
 
@@ -502,12 +521,10 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 }
 
 #login-form img{
-	float: left;
 	margin: 10px;
 }
 
 #login-help{
-	float: left;
 	/* background: #f0efec; */
 	margin-left: 0px;
 	margin-top: 30px;
@@ -521,7 +538,6 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 }
 
 #login-help span{
-	float: left;
 	width: 100%;
 	text-align: center;
 	display: inline-block;
@@ -543,11 +559,14 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 }
 
 #my-footer {
+	clear: both;
 	background-color: #6aa;
+	/*
 	float: left;
-	width: 100%;
 	background-repeat: no-repeat;
 	background-position: left top;
+	*/
+	width: 100%;
 	opacity: 1.0;
 
 	margin-top: 8px;
