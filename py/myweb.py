@@ -159,17 +159,17 @@ class bloglist:
 
 # resource page
 class resource:
-	def GET(self, categoryid=None, blogid=None):
+	def GET(self, categoryid=None, resourceid=None):
 		categorys = json.loads(appres.category().GET())
-		blogs = json.loads(appblog.blog().GET(blogid))
-		mylog.loginfo(appblog.blog())
-		return render.blogview(menuname='/blog',
-				login=islogin(), 
-				mgrprivilege=mgrprivilege(),
-				blogid=blogid, 
-				categoryid=categoryid,
-				categorys=categorys, 
-				blogs=blogs)
+		resources = json.loads(appres.resource().GET(resourceid))
+		mylog.loginfo(appres.resource())
+		return render.resourceview(menuname='/resource',
+				login = islogin(), 
+				mgrprivilege = mgrprivilege(),
+				resourceid = resourceid, 
+				categoryid = categoryid,
+				categorys = categorys, 
+				resources = resources)
 
 # manage blog page
 class mgrblog:

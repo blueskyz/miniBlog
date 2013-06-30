@@ -21,20 +21,64 @@ privilege = myutil.privilege
 class reres:
 	def GET(self): raise web.seeother('/')
 
-class resourcecount:
-	def GET(self):
+class count:
+	def GET(self, categoryid=None):
 		try:
-			curwhere = "privilege <= %d" % (privilege())
-			curset = db.select("resource", what="count(createtime) as total", 
-					where=curwhere).list()
-			#query = ("select count(createtime) as total from resource "
-			#		"where privilege <= %d") % (privilege())
-			#curset = db.query(query)
-			web.header("content-type", "application/json")
+			query = ("select count(resource_id) as total from resource"
+					"where privilege <= %d;") % (privilege())
+			if int(categoryid) != 0:
+				query = ("select count(res_category_link.category_id) as total "
+						"from res_category_link left outer join resource "
+						"on resource.resource_id = res_category_link.resource_id "
+						"where resource.privilege <= %d and "
+						"res_category_link.category_id = %d;") \
+				%(privilege(), int(categoryid))
+			curset = db.query(query)
 			return json.dumps({'count': curset[0]["total"]}, ensure_ascii=False)
 		except Exception, err:
 			web.BadRequest()
-			web.header("content-type", "application/json")
+			return '{"desc": "%s", "sql:" "%s"}' % (err, query)
+
+class category:
+	def GET(self):
+		try:
+			categorylist = []
+			# all category
+			curwhere = "privilege <= %d" % (privilege())
+			curlist = db.select("resource", what="count(resource_id) as count", 
+					where=curwhere).list()
+			category = {"count": curlist[0]["count"], "category_id": 0, 
+					"name": u"所有日志", "description": u"所有日志"}
+			categorylist.append(category)
+
+			# other category
+			query = "select res_category.category_id as category_id, " \
+					"category.name as name, " \
+					"res_category.description as description, " \
+					"count(res_category_link.category_id) as count " \
+					"from (resource, res_category) left outer join res_category_link " \
+					"on resource.resource_id = res_category_link.resource_id " \
+					"and res_category.category_id= res_category_link.category_id " \
+					"where resource.privilege <= %d " \
+					"group by res_category.category_id;" % (privilege())
+			curlist = db.query(query).list()
+			for item in curlist:
+				category = {}
+				category["category_id"] = item["category_id"]
+				category["name"] = item["name"]
+				category["description"] = item["description"]
+				category["count"] = item["count"]
+				categorylist.append(category)
+			return json.dumps(categorylist, ensure_ascii=False)
+		except Exception, err:
+			web.BadRequest()
+			return '{"desc": "%s"}' % (err)
+
+	def POST(self):
+		try:
+			pass
+		except Exception, err:
+			web.BadRequest()
 			return '{"desc": "%s"}' % (err)
 
 class resourcecontent:

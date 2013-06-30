@@ -365,11 +365,45 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 	border-top: 1px dashed #3B89BA;
 }
 
+.simple-list #photo-ul:after {
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0px;
+	visibility: hidden;
+	border-top: 1px dashed #3B89BA;
+}
+
+#scrollUp {
+	background-attachment: scroll;
+	background-clip: border-box;
+	background-color: transparent;
+	background-image: url("/static/image/top.png");
+	background-origin: padding-box;
+	background-position: 0 0;
+	background-repeat: no-repeat;
+	background-size: auto auto;
+	bottom: 20px;
+	height: 38px;
+	right: 20px;
+	width: 38px;
+	margin: 16px;
+	display: block;
+	float: left;
+	z-index: 2147483647;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: 3px 3px 6px #666; 
+	-moz-box-shadow: 3px 3px 6px #666; 
+	box-shadow: 3px 3px 6px #666;
+}
+
 /*
 .simple-list .blog-li:nth-child(even) {
-	background: #EDF4F1;
+background: #EDF4F1;
 }
-*/
+ */
 
 /*
  * split page
@@ -433,6 +467,12 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 }
 
 #my-side {
+	/*
+	float: right;
+	*/
+}
+
+#right-col {
 	float: right;
 	width: 220px;
 }

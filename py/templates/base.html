@@ -47,15 +47,19 @@ menus.append('<a href="/about">关于</a>')
 				<div id="my-main">
 					${self.body()}
 				</div>
-				<div id="my-side">
-					<div class="widget-side">
-						${self.category()}
-					</div>
-					<div class="widget-side">
-						<h4>友情链接</h4>
-						<ul class="newlink">
-							<li><a href="http://www.rui-yang.com/">Everybody loves Rui</a></li>
-						</ul>
+				<div id="right-col">
+					<div class="pinned" id="my-side">
+						<div class="widget-side">
+							${self.category()}
+						</div>
+						<div class="widget-side">
+							<h4>友情链接</h4>
+							<ul class="newlink">
+								<li><a href="http://www.rui-yang.com/">Everybody loves Rui</a></li>
+							</ul>
+						</div>
+						<a id="scrollUp" href="#top" title="">
+						</a>
 					</div>
 				</div>
 			</div>
@@ -65,9 +69,19 @@ menus.append('<a href="/about">关于</a>')
 		</div>
 	</body>
 	<script type="text/javascript" src="/static/js/jquery.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.pin.js"></script>
 	<script type="text/javascript" src="/static/js/pirobox.js"></script>
 	<script type="text/javascript" src="/static/js/myjs.js"></script>
 	${self.loadjs()}
+	<script type="text/javascript">
+		$(function(){
+				var scollTop = function(info){
+				$(".pinned").pin({containerSelector: "#my-content",
+					minWidth: 940})};
+				$(scollTop);
+				$("#right-col").ajaxComplete(scollTop);
+				});
+	</script>
 	</html>
 
 	<%def name='loadcss()'>
