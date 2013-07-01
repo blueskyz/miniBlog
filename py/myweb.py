@@ -68,10 +68,12 @@ def createprocessor():
 		mylog.loginfo()
 	app.add_processor(web.loadhook(pre_hook))
 	def post_hook():
-		if web.ctx.fullpath[0:6] == "/rest/" \
-				and web.ctx.fullpath[6:14] != "resource" \
-				and web.ctx.fullpath[6:11] != "photo":
-			web.header("content-type", "application/json")
+		if web.ctx.fullpath[0:6] == "/rest/": 
+				if web.ctx.fullpath[6:14] != "resource" \
+						and web.ctx.fullpath[6:11] != "photo":
+							web.header("content-type", "application/json")
+				else:
+					return
 		else:
 			web.header("content-type", "text/html; charset=utf-8")
 	app.add_processor(web.unloadhook(post_hook))

@@ -24,15 +24,15 @@ class reres:
 class count:
 	def GET(self, categoryid=None):
 		try:
-			query = ("select count(resource_id) as total from resource"
+			query = ("select count(resource_id) as total from resources "
 					"where privilege <= %d;") % (privilege())
 			if int(categoryid) != 0:
 				query = ("select count(res_category_link.category_id) as total "
-						"from res_category_link left outer join resource "
-						"on resource.resource_id = res_category_link.resource_id "
-						"where resource.privilege <= %d and "
+						"from res_category_link left outer join resources "
+						"on resources.resource_id = res_category_link.resource_id "
+						"where resources.privilege <= %d and "
 						"res_category_link.category_id = %d;") \
-				%(privilege(), int(categoryid))
+								%(privilege(), int(categoryid))
 			curset = db.query(query)
 			return json.dumps({'count': curset[0]["total"]}, ensure_ascii=False)
 		except Exception, err:
@@ -45,21 +45,21 @@ class category:
 			categorylist = []
 			# all category
 			curwhere = "privilege <= %d" % (privilege())
-			curlist = db.select("resource", what="count(resource_id) as count", 
+			curlist = db.select("resources", what="count(resource_id) as count", 
 					where=curwhere).list()
 			category = {"count": curlist[0]["count"], "category_id": 0, 
-					"name": u"所有日志", "description": u"所有日志"}
+					"name": u"所有资源", "description": u"所有资源"}
 			categorylist.append(category)
 
 			# other category
 			query = "select res_category.category_id as category_id, " \
-					"category.name as name, " \
+					"res_category.name as name, " \
 					"res_category.description as description, " \
 					"count(res_category_link.category_id) as count " \
-					"from (resource, res_category) left outer join res_category_link " \
-					"on resource.resource_id = res_category_link.resource_id " \
+					"from (resources, res_category) left outer join res_category_link " \
+					"on resources.resource_id = res_category_link.resource_id " \
 					"and res_category.category_id= res_category_link.category_id " \
-					"where resource.privilege <= %d " \
+					"where resources.privilege <= %d " \
 					"group by res_category.category_id;" % (privilege())
 			curlist = db.query(query).list()
 			for item in curlist:
@@ -81,19 +81,21 @@ class category:
 			web.BadRequest()
 			return '{"desc": "%s"}' % (err)
 
-class resourcecontent:
+class resource:
 	def GET(self, resourceid):
 		try:
-			curwhere = "createtime='%s' and privilege <= %d" % (resourceid, privilege())
-			curlist = db.select("resource", what="name, description, privilege, image", 
+			curwhere = "resource_id=%d and privilege <= %d" \
+					% (int(resourceid), privilege())
+			curlist = db.select("resources", 
+					what="name, description, privilege, image", 
 					where=curwhere).list()
 			if len(curlist) is None:
-				raise Exception("can't find image")
+				raise Exception("can't find file!")
 			buf = {}
 			buf["name"] = curlist[0]["name"]
 			buf["description"] = curlist[0]["description"]
 			timepath = time.localtime(int(resourceid))
-			buf["imgresource"] = "/resource/600/%s" % (curlist[0]['image'])
+			buf["resurl"] = "/mydb/resources/600/%s" % (curlist[0]['path'])
 			buf["privilege"] = curlist[0]["privilege"]
 			web.header('content-type', "application/json")
 			return json.dumps(buf, ensure_ascii=False)
@@ -106,8 +108,9 @@ class resourcecontent:
 		try:
 			if privilege() < 1:
 				raise Exception("privilege is error")
-			curwhere = "createtime='%s'" % (resourceid)
-			curlist = db.select("resource", what="createtime", where=curwhere).list()
+			curwhere = "resource_id=%d" % (int(resourceid))
+			curlist = db.select("resources", what="resource_id", 
+					where=curwhere).list()
 			newId = resourceid
 			if len(curlist) == 0:
 				newId = self.__insert__(resourceid)
@@ -129,13 +132,13 @@ class resourcecontent:
 		if imgtypeStr == "png":
 			imgExt = ".png"
 		imagePath = "%d/%d/%d.%s" % (timeInfo.tm_year, timeInfo.tm_mon, newresourceid, imgExt)
-		db.insert("resource", createtime=newresourceid, name=data["name"],
+		db.insert("resources", createtime=newresourceid, name=data["name"],
 				description=data["description"], updated=int(time.time()),
 				imagetype=itype[imgtypeStr], image=imagePath,
 				privilege=data["privilege"])
 		fstr.close()
 		# save filedb
-		orgresourcePath = config.filedb + 'resource/org/' + imagePath
+		orgresourcePath = config.filedb + 'resources/org/' + imagePath
 		if path.exists( path.dirname(orgresourcePath) ) is False:
 			os.makedirs( path.dirname(orgresourcePath) )
 		outOrgImg = file(orgresourcePath, 'w')
@@ -143,17 +146,17 @@ class resourcecontent:
 		outOrgImg.flush()
 		outOrgImg.close()
 		# 600 scale
-		resourcePath_600 = config.filedb + 'resource/600/' + imagePath
+		resourcePath_600 = config.filedb + 'resources/600/' + imagePath
 		self.__createScalcresourceFile__(imgtypeStr, content, 600, resourcePath_600)
 
 		# 80 scale
-		resourcePath_80 = config.filedb + 'resource/80/' + imagePath
+		resourcePath_80 = config.filedb + 'resources/80/' + imagePath
 		self.__createScalcresourceFile__(imgtypeStr, content, 80, resourcePath_80)
 
 	def __update__(self, resourceid):
 		curwhere = "createtime='%s'" % (resourceid)
 		data = web.input()
-		db.update("resource", where=curwhere, name=data["name"], 
+		db.update("resources", where=curwhere, name=data["name"], 
 				description=data["description"], updated=int(time.time()),
 				privilege=data["privilege"])
 
@@ -213,12 +216,12 @@ class resourcedelete:
 		try:
 			if privilege() < 1:
 				raise Exception("privilege is error")
-			curwhere = "createtime='%s'" % (resourceid)
-			curlist = db.select("resource", what="image", 
+			curwhere = "resource_id=%d" % (int(resourceid))
+			curlist = db.select("resources", what="path", 
 					where=curwhere).list()
 			if len(curlist) != 0:
-				self.__deleteFile__(curlist[0]["image"])
-			db.delete("resource", where=curwhere)
+				self.__deleteFile__(curlist[0]["path"])
+			db.delete("resources", where=curwhere)
 			web.header("content-type", "application/json")
 			return json.dumps({'desc': 'success'})
 		except Exception, err:
@@ -228,71 +231,10 @@ class resourcedelete:
 
 	def __deleteFile__(self, filePath):
 		try:
-			imagePath_Org = config.filedb + 'resource/org/' + filePath
+			imagePath_Org = config.filedb + 'resources/' + filePath
 			os.remove(imagePath_Org)
-			imagePath_600 = config.filedb + 'resource/600/' + filePath
-			os.remove(imagePath_600)
-			imagePath_80 = config.filedb + 'resource/80/' + filePath
-			os.remove(imagePath_80)
 		except Exception, err:
 			return '{"desc": "%s"}' % (err)
-
-class resource:
-	def GET(self, resourceid, scale):
-		itype = {0:"image/jpeg", 1:"image/png"}
-		itypename = {0: "jpeg", 1:"png"}
-		try:
-			curwhere = "createtime='%s' and privilege <= %d" % (resourceid, privilege())
-			curlist = db.select("resource", what="image, imagetype", 
-					where=curwhere).list()
-			if len(curlist) == 0:
-				raise Exception("can't find image")
-			scale= int(scale)
-			if (scale== 80 or scale== 600):
-				#web.header('content-type', itype[imagetype])
-				web.header("x-accel-redirect", 
-						"/filedb/resource/%d/%s" % (scale, curlist[0]["image"]))
-				return
-			if scale!= 1:
-				imageFile = config.filedb + 'resource/org/' + curlist[0]["image"]
-				imagetype = curlist[0]["imagetype"]
-				buf = self.__getscaleresource__(itypename[imagetype], imageFile, scale)
-				#web.header('content-type', itype[imagetype])
-				return buf
-			web.header('content-type', "application/json")
-			buf = '{"desc": "failure", "image", "%s can\'t find"}' % (curlist[0]["image"])
-			return buf
-		except Exception, err:
-			web.BadRequest()
-			web.header("content-type", "application/json")
-			return '{"desc": "%s"}' % (err)
-
-	def __getscaleresource__(self, imagetype, imageFile, scale):
-		try:
-			outstr = StringIO.StringIO()
-			im = Image.open(imageFile)
-			rate = float(scale)/float(im.size[1])
-			size = (int(im.size[0] * rate), int(im.size[1] * rate))
-			im = self.__fix_orientation__(im)
-			im.thumbnail(size, Image.ANTIALIAS)
-			im.save(outstr, imagetype)
-			retdata = outstr.getvalue()
-			outstr.close()
-			return retdata
-		except Exception, err:
-			web.BadRequest()
-			web.header("content-type", "application/json")
-			return '{"desc": "%s"}' % (err)
-
-	def __fix_orientation__(self, im):
-		try:
-			orientation = im._getexif()[EXIF_ORIENTATION_TAG]
-			if orientation in [3, 6, 8]:
-				degrees = ORIENTATIONS[orientation][1]
-				im = im.rotate(degrees)
-			return im
-		except Exception, err:
-			return im
 
 class resourcelist:
 	def GET(self, pageindex=1, count=8):
@@ -300,25 +242,24 @@ class resourcelist:
 			offset = int(count)
 			start = (int(pageindex) - 1) * offset
 			curwhere = "privilege <= %d" % (privilege())
-			order = "createtime desc"
-			curlist = db.select("resource", 
-					what="createtime, name, description, updated, image",
+			order = "ctime desc"
+			curlist = db.select("resources", 
+					what="ctime, utime, name, description, path",
 					where=curwhere, order=order, 
 					limit="%d, %d" % (start,offset)).list()
 
 			resourcelist = []
 			for resourceiter in curlist:
-				resource = {}
-				resource["resourceid"] = resourceiter["createtime"]
-				resource["name"] = resourceiter["name"]
-				resource["desc"] = resourceiter["description"]
-				resource["time"] = time.strftime("%Y-%m-%d", 
-						time.localtime(resourceiter["createtime"]))
-				resource["updated"] = time.strftime("%Y-%m-%d",
-						time.localtime(resourceiter["updated"]))
-				resource["small-resource"] = "/rest/resource/%d/80/" % (resource["resourceid"])
-				resource["big-resource"] = "/rest/resource/%d/600/" % (resource["resourceid"])
-				resourcelist.append(resource)
+				resources = {}
+				resources["resourceid"] = resourceiter["resource_id"]
+				resources["name"] = resourceiter["name"]
+				resources["desc"] = resourceiter["description"]
+				resources["time"] = time.strftime("%Y-%m-%d", 
+						time.localtime(resourceiter["ctime"]))
+				resources["updated"] = time.strftime("%Y-%m-%d",
+						time.localtime(resourceiter["utime"]))
+				resources["resurl"] = "/mydb/resources/%d/" % (resources["resourceid"])
+				resourcelist.append(resources)
 			web.header("content-type", "application/json")
 			return json.dumps(resourcelist, ensure_ascii=False)
 		except Exception, err:
@@ -329,10 +270,9 @@ class resourcelist:
 
 urls = (# rest router
 		"/list/([1-9][0-9]{0,2})/([1-9][0-9]{0,1})/?", "resourcelist",
-		"/([1-9][0-9]{9})/([0-9]{1,4})/?", "resource",
-		"/([1-9][0-9]{9})/?", "resourcecontent",
+		"/([1-9][0-9]{9})/?", "resource",
 		"/([1-9][0-9]{9})/delete/?", "resourcedelete",
-		"", "repres",
+		"", "reres",
 		"/", "resourcecount")
 
 app_resource = web.application(urls, globals(), autoreload=config.autoreload)

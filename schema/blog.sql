@@ -62,10 +62,12 @@ CREATE TABLE IF NOT EXISTS sessions ( session_id CHAR(128) UNIQUE NOT NULL,
 	data char(255) DEFAULT NULL) ENGINE=MyIsam;
 
 -- create resource table
-CREATE TABLE IF NOT EXISTS resources ( resource_id char(128) UNIQUE NOT NULL,
-	utime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	ctime timestamp NOT NULL DEFAULT 0,
+CREATE TABLE IF NOT EXISTS resources ( resource_id int(4) primary key AUTO_INCREMENT,
+	ctime int(4) NOT NULL default 0,
+	utime int(4) NOT NULL default 0,
 	name char(255) DEFAULT NULL,
+	path char(255) DEFAULT NULL,
+	privilege int(4) NOT NULL default 0,
 	description varchar(1024)) ENGINE=MyIsam;
 
 -- create resource category

@@ -387,9 +387,9 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 	height: 38px;
 	right: 20px;
 	width: 38px;
-	margin: 16px;
+	margin-top: 16px;
 	display: block;
-	float: left;
+	float: right;
 	z-index: 2147483647;
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;

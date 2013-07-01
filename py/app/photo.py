@@ -66,7 +66,7 @@ class photocontent:
 			buf["name"] = curlist[0]["name"]
 			buf["description"] = curlist[0]["description"]
 			timepath = time.localtime(int(photoid))
-			buf["imgphoto"] = "/photo/600/%s" % (curlist[0]['image'])
+			buf["imgphoto"] = "/mydb/photo/600/%s" % (curlist[0]['image'])
 			buf["privilege"] = curlist[0]["privilege"]
 			web.header('content-type', "application/json")
 			return json.dumps(buf, ensure_ascii=False)
@@ -225,7 +225,7 @@ class photo:
 			if (scale== 80 or scale== 600):
 				web.header('content-type', itype[imagetype])
 				web.header("x-accel-redirect", 
-						"/filedb/photo/%d/%s" % (scale, curlist[0]["image"]))
+						"/mydb/photo/%d/%s" % (scale, curlist[0]["image"]))
 				return
 			if scale!= 1:
 				imageFile = config.filedb + 'photo/org/' + curlist[0]["image"]
@@ -289,8 +289,6 @@ class photolist:
 						time.localtime(photoiter["createtime"]))
 				photo["updated"] = time.strftime("%Y-%m-%d",
 						time.localtime(photoiter["updated"]))
-				#photo["small-photo"] = "/rest/photo/%d/80" % (photo["photoid"])
-				#photo["big-photo"] = "/rest/photo/%d/600" % (photo["photoid"])
 				photo["small-photo"] = "/mydb/photo/80/%s" % (photoiter["image"])
 				photo["big-photo"] = "/mydb/photo/600/%s" % (photoiter["image"])
 				photolist.append(photo)
