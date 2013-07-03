@@ -39,6 +39,7 @@ urls = (# rest
 		# mgr page
 		"/manage/blog/?([1-9][0-9]{9}){0,1}/?", "mgrblog",
 		"/manage/photo/?([1-9][0-9]{9}){0,1}/?", "mgrphoto",
+		"/manage/resource/?([1-9][0-9]{9}){0,1}/?", "mgrres",
 		"/manage/user/?([0-9]{1,3}){0,1}/?", "mgruser",
 		"/(.*)", "myweb")
 
@@ -190,6 +191,15 @@ class mgrphoto:
 				login=islogin(), 
 				mgrprivilege=mgrprivilege(), 
 				photoid=photoid)
+
+# manage photo page
+class mgrres:
+	def GET(self, resourceid = None):
+		return render.mgrresview(menuname = '/manage',
+				curmgrtype = '/resource',
+				login = islogin(), 
+				mgrprivilege = mgrprivilege(), 
+				resourceid = resourceid)
 
 # manage user page
 class mgruser:

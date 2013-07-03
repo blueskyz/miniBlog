@@ -272,8 +272,6 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 }
 
 .form-item{
-	float: left;
-	width: 100%;
 	margin-bottom: 10px;
 }
 
@@ -288,19 +286,28 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 }
 
 .mgr-content{
-	float: left;
 	width: 100%;
 }
 
 .mgr-content form{
-	float: left;
-	width: 95%;
 	padding: 10px;
+	margin: 20px;
+	border: 1px solid #3B89BA;
 }
 
+/*
+.mgr-content form:after, .form-item:after{
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0px;
+	visibility: hidden;
+}
+*/
+
 .mgr-content label, .mgr-content input, .mgr-content select, .mgr-content textarea{
-	float: left;
-	width: 100%;
+	display: block;
+	width: 95%;
 	margin: 0px 0px 5px 0px;
 }
 
@@ -309,6 +316,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 }
 
 #submit, #new, #delete{
+	display: inline;
 	width: auto;
 	margin-right: 10px;
 }

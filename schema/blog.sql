@@ -57,16 +57,20 @@ CREATE INDEX updated_ind ON photo (updated);
 CREATE INDEX year_ind ON photo(year);
 
 -- create sessions
-CREATE TABLE IF NOT EXISTS sessions ( session_id CHAR(128) UNIQUE NOT NULL,
+CREATE TABLE IF NOT EXISTS sessions ( 
+	session_id CHAR(128) UNIQUE NOT NULL,
 	atime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	data char(255) DEFAULT NULL) ENGINE=MyIsam;
 
 -- create resource table
-CREATE TABLE IF NOT EXISTS resources ( resource_id int(4) primary key AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS resources ( 
+	resource_id int(4) primary key AUTO_INCREMENT,
 	ctime int(4) NOT NULL default 0,
 	utime int(4) NOT NULL default 0,
 	name char(255) DEFAULT NULL,
 	path char(255) DEFAULT NULL,
+	md5 char(32) NOT NULL,
+	filesize int(4) NOT NULL,
 	privilege int(4) NOT NULL default 0,
 	description varchar(1024)) ENGINE=MyIsam;
 

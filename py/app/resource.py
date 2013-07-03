@@ -84,19 +84,33 @@ class category:
 class resource:
 	def GET(self, resourceid):
 		try:
+			# 获取资源
 			curwhere = "resource_id=%d and privilege <= %d" \
 					% (int(resourceid), privilege())
 			curlist = db.select("resources", 
-					what="name, description, privilege, image", 
+					what="resource_id, name, path, description, " \
+							"privilege, md5, filesize", 
 					where=curwhere).list()
 			if len(curlist) is None:
 				raise Exception("can't find file!")
 			buf = {}
+			buf["resourceid"] = curlist[0]["resource_id"]
 			buf["name"] = curlist[0]["name"]
 			buf["description"] = curlist[0]["description"]
 			timepath = time.localtime(int(resourceid))
-			buf["resurl"] = "/mydb/resources/600/%s" % (curlist[0]['path'])
+			buf["resurl"] = "/mydb/resources/other/%s" % (curlist[0]['path'])
 			buf["privilege"] = curlist[0]["privilege"]
+			buf["md5"] = curlist[0]["md5"]
+			buf["filesize"] = curlist[0]["filesize"]
+			# 获取资源所属类目
+			catwhere = "resource_id=%d" % (int(resourceid))
+			catlist = db.select("res_category_link",
+					what = "category_id",
+					where = catwhere).list()
+			if len(catlist) is None:
+				buf["categoryid"] = 0
+			else:
+				buf["categoryid"] = catlist[0]["category_id"]
 			web.header('content-type', "application/json")
 			return json.dumps(buf, ensure_ascii=False)
 		except Exception, err:
@@ -122,91 +136,40 @@ class resource:
 			return '{"desc": "%s"}' % (err)
 
 	def __insert__(self, resourceid):
-		itype = {"jpeg": 0, "png": 1}
 		data = web.input()
 		content = buffer(data["content"])
 		fstr = StringIO.StringIO(content)
-		(newresourceid, imgtypeStr) = self.__imgid__(resourceid, fstr)
-		timeInfo = time.localtime(int(resourceid))
-		imgExt = "jpg"
-		if imgtypeStr == "png":
-			imgExt = ".png"
-		imagePath = "%d/%d/%d.%s" % (timeInfo.tm_year, timeInfo.tm_mon, newresourceid, imgExt)
-		db.insert("resources", createtime=newresourceid, name=data["name"],
-				description=data["description"], updated=int(time.time()),
-				imagetype=itype[imgtypeStr], image=imagePath,
+		nowtime = time.time()
+		md5str = md5.md5(fstr).hexdigest()
+		filePath = "%d_%s" % (nowtime, md5str)
+		db.insert("resources", 
+				ctime=nowtime, 
+				utime = nowtime,
+				name = data["name"],
+				description = data["description"], 
+				path = filePath,
+				md5 = md5str,
+				filesize = len(content),
 				privilege=data["privilege"])
 		fstr.close()
 		# save filedb
-		orgresourcePath = config.filedb + 'resources/org/' + imagePath
+		orgresourcePath = config.filedb + 'resources/other/' + filePath
 		if path.exists( path.dirname(orgresourcePath) ) is False:
 			os.makedirs( path.dirname(orgresourcePath) )
 		outOrgImg = file(orgresourcePath, 'w')
 		outOrgImg.write(content)
 		outOrgImg.flush()
 		outOrgImg.close()
-		# 600 scale
-		resourcePath_600 = config.filedb + 'resources/600/' + imagePath
-		self.__createScalcresourceFile__(imgtypeStr, content, 600, resourcePath_600)
-
-		# 80 scale
-		resourcePath_80 = config.filedb + 'resources/80/' + imagePath
-		self.__createScalcresourceFile__(imgtypeStr, content, 80, resourcePath_80)
 
 	def __update__(self, resourceid):
-		curwhere = "createtime='%s'" % (resourceid)
+		curwhere = "resource_id=%d" % (int(resourceid))
 		data = web.input()
-		db.update("resources", where=curwhere, name=data["name"], 
-				description=data["description"], updated=int(time.time()),
+		db.update("resources", 
+				where=curwhere, 
+				name=data["name"], 
+				description=data["description"], 
+				utime=int(time.time()),
 				privilege=data["privilege"])
-
-	def __imgid__(self, resourceid, fstr):
-		im = Image.open(fstr)
-		try:
-			resourcetimestr = im._getexif()[36867]
-			resourcetime = time.strptime(resourcetimestr, "%Y:%m:%d %H:%M:%S") 
-			return (int(time.mktime(resourcetime)), im.format.lower())
-		except Exception, err:
-			return (int(resourceid), im.format.lower())
-
-	def __createScalcresourceFile__(self, imagetype, buf, scale, filePath):
-		content = self.__getScaleresource__(imagetype, buf, scale)
-		if path.exists( path.dirname(filePath) ) is False:
-			os.makedirs( path.dirname(filePath) )
-		outOrgImg = file(filePath, 'w')
-		outOrgImg.write(content)
-		outOrgImg.flush()
-		outOrgImg.close()
-
-	def __getScaleresource__(self, imagetype, buf, scale):
-		try:
-			fstr = StringIO.StringIO(buf)
-			im = Image.open(fstr)
-			outstr = StringIO.StringIO()
-			rate = float(scale)/float(im.size[1])
-			size = (im.size[0] * rate, im.size[1] * rate)
-			im = self.__fix_orientation__(im)
-			im.thumbnail(size, Image.ANTIALIAS)
-			im.save(outstr, imagetype)
-			retdata = outstr.getvalue()
-			fstr.close()
-			outstr.close()
-			return retdata
-		except Exception, err:
-			web.BadRequest()
-			web.header("content-type", "application/json")
-			return '{"desc": "%s"}' % (err)
-
-	def __fix_orientation__(self, im):
-		try:
-			orientation = im._getexif()[EXIF_ORIENTATION_TAG]
-			if orientation in [3, 6, 8]:
-				degrees = ORIENTATIONS[orientation][1]
-				im = im.rotate(degrees)
-			return im
-		except Exception, err:
-			return im
-
 
 class resourcedelete:
 	def GET(self, resourceid):
@@ -231,7 +194,7 @@ class resourcedelete:
 
 	def __deleteFile__(self, filePath):
 		try:
-			imagePath_Org = config.filedb + 'resources/' + filePath
+			imagePath_Org = config.filedb + 'resources/other/' + filePath
 			os.remove(imagePath_Org)
 		except Exception, err:
 			return '{"desc": "%s"}' % (err)
@@ -244,7 +207,8 @@ class resourcelist:
 			curwhere = "privilege <= %d" % (privilege())
 			order = "ctime desc"
 			curlist = db.select("resources", 
-					what="ctime, utime, name, description, path",
+					what="resource_id, ctime, utime, name, "\
+							"description, path, md5, filesize",
 					where=curwhere, order=order, 
 					limit="%d, %d" % (start,offset)).list()
 
@@ -258,7 +222,10 @@ class resourcelist:
 						time.localtime(resourceiter["ctime"]))
 				resources["updated"] = time.strftime("%Y-%m-%d",
 						time.localtime(resourceiter["utime"]))
-				resources["resurl"] = "/mydb/resources/%d/" % (resources["resourceid"])
+				resources["resurl"] = "/mydb/resources/other/%d/" \
+						% (resources["path"])
+				resources["md5"] = resources["md5"]
+				resources["filesize"] = resources["filesize"]
 				resourcelist.append(resources)
 			web.header("content-type", "application/json")
 			return json.dumps(resourcelist, ensure_ascii=False)

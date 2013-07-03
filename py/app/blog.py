@@ -20,7 +20,7 @@ class count:
 		try:
 			query = ("select count(blog_id) as total from blog "
 					"where privilege <= %d;") % (privilege())
-			if int(categoryid) != 0:
+			if categoryid and int(categoryid) != 0:
 				query = ("select count(category_link.category_id) as total "
 						"from category_link left outer join blog "
 						"on blog.blog_id = category_link.blog_id "
@@ -223,6 +223,7 @@ class blog:
 			return '{"desc": "%s"}' % (err)
 
 urls = (# rest router
+		"/", "count",
 		"/category/?", "category",
 		"/category/([0-9]{1,2})/count/?", "count",
 		"/category/([0-9]{1,2})/([1-9][0-9]{0,2})/([1-9][0-9]{0,1})/?", "bloglist",
