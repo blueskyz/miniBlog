@@ -1,0 +1,73 @@
+<%inherit file='base.html' />
+
+<%def name="loadcss()">
+</%def>
+<%def name='loadjs()'>
+</%def>
+
+<%
+mapcategoryname = {}
+for item in categorys:
+	mapcategoryname[item['category_id']] = item['name']
+%>
+
+<%def name="category()">
+<h4>分类</h4>
+<ul id="resourcecategory">
+% for item in categorys:
+% if item['category_id'] == int(categoryid):
+<li class="selected">
+% else:
+<li>
+% endif
+<a href='/resource/${item["category_id"]}'>${item['name']}  (${item['count']})</a>
+</li>
+% endfor
+</ul>
+</%def>
+
+<div class="simple-list">
+	<h1 id="resource-title">${mapcategoryname[int(categoryid)]}</h1>
+	<ul id="resource-ul">
+		% for resource in resources:
+		<li class="resource-li">
+		<div class="resource-item">
+			<div class="resource-head">
+				<a href="${resource['resurl']}">
+					${resource['name']}
+				</a>
+			</div>
+			<div class="resource-attrs">
+				<span class="resource-attr">${resource['ctime']}</span>
+				<span class="resource-attr">${resource['utime']}[U]</span>
+				<span class="categoryattr">
+					<a href="/resource/${resource['category_id']}/">${mapcategoryname[resource['category_id']]}</a>
+				</span>
+			% if mgrprivilege:
+			<span class="resource-attr">
+				<a href="/manage/resource/${resource['resourceid']}">编辑</a>
+			</span>
+			% endif
+			</div>
+			<div class="resource-content">
+				${resource['desc']}
+			</div>
+		</div>
+		</li>
+		% endfor
+	</ul>
+</div>
+<div class="splitpagediv">
+	<ul class="splitpage">
+		% for i in range(1, pagecount+1):
+		% if pageidx == i:
+		<li class="selectpage" index="${i}">${i}</li>
+		% else:
+		<li class="pageindex" index="${i}">
+		<a href="/resource/${categoryid}/${i}/${pagesize}">${i}</a>
+		</li>
+		% endif
+		% endfor
+	</ul>
+</div>
+
