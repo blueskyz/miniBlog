@@ -35,7 +35,11 @@ for item in categorys:
 	<ul id="blog-ul">
 		% for blog in blogs:
 		<li class="blog-li">
+		% if blogid:
+		<div class="blog-content">
+		% else:
 		<div class="blog-item">
+			% endif
 			<div class="blog-head">
 				<a href="/blog/${blog['category_id']}/${blog['blogid']}">
 					${blog['title']}

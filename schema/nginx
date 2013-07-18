@@ -53,9 +53,11 @@ case "$1" in
 	;;
   restart|force-reload)
 	echo -n "Restarting $DESC: "
+	su - clark -c /sbin/stopwebpy
 	start-stop-daemon --stop --quiet --pidfile \
 		/var/run/$NAME.pid --exec $DAEMON || true
 	sleep 1
+	su - clark -c /sbin/startwebpy
         test_nginx_config
 	start-stop-daemon --start --quiet --pidfile \
 		/var/run/$NAME.pid --exec $DAEMON -- $DAEMON_OPTS || true

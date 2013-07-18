@@ -31,15 +31,18 @@ urls = (# rest
 		"/rest/blog", appblog.app_blog,
 		"/rest/resource", appres.app_resource,
 		"/rest/user", appuser.app_user,
+
 		# page
 		"/photo/?", "photo",
 		"/login/?", "login",
 		"/blog/([0-9]{1,2}){1}/([1-9][0-9]{9}){1}/?", "blog",
 		"/blog/?([0-9]{1,2}){0,1}/?([1-9][0-9]{0,1}){0,1}/?([1-9][0-9]{0,1}){0,1}/?", "bloglist",
+		"/resource/?([0-9]{1,2}){0,1}/?([1-9][0-9]{0,1}){0,1}/?([1-9][0-9]{0,1}){0,1}/?", "resource",
+
 		# mgr page
 		"/manage/blog/?([1-9][0-9]{9}){0,1}/?", "mgrblog",
 		"/manage/photo/?([1-9][0-9]{9}){0,1}/?", "mgrphoto",
-		"/manage/resource/?([1-9][0-9]{9}){0,1}/?", "mgrres",
+		"/manage/resource/?([1-9][0-9]{0,9}){0,1}/?", "mgrres",
 		"/manage/user/?([0-9]{1,3}){0,1}/?", "mgruser",
 		"/(.*)", "myweb")
 
@@ -82,7 +85,7 @@ def createprocessor():
 createprocessor()
 
 def islogin():
-	mylog.loginfo(web.ctx.session.authcode)
+	#mylog.loginfo(web.ctx.session.authcode)
 	return web.ctx.session.privilege >= 0
 
 def mgrprivilege():
@@ -95,12 +98,11 @@ class myweb:
 		categorys = json.loads(appblog.category().GET())
 		blogs = json.loads(appblog.bloglist().GET(0, 1, 40))
 		return render.index(menuname = '/', 
-				login=islogin(), 
+				login = islogin(), 
 				mgrprivilege=mgrprivilege(), 
-				photocount=8, 
-				blogcount=15, 
-				categorys=categorys,
-				blogs=blogs)
+				photocount = 8, 
+				categorys = categorys,
+				blogs = blogs)
 
 # login page
 class login:
@@ -113,33 +115,34 @@ class login:
 class photo:
 	def GET(self):
 		return render.photoview(menuname='/photo',
-				login=islogin(), 
-				mgrprivilege=mgrprivilege(), 
-				photocount=40)
+				login = islogin(), 
+				mgrprivilege = mgrprivilege(), 
+				photocount = 40)
 
 # blog page
 class blog:
-	def GET(self, categoryid=None, blogid=None):
+	def GET(self, categoryid = None, blogid = None):
 		categorys = json.loads(appblog.category().GET())
 		blogs = json.loads(appblog.blog().GET(blogid))
-		mylog.loginfo(appblog.blog())
+		#mylog.loginfo(appblog.blog())
 		return render.blogview(menuname='/blog',
-				login=islogin(), 
-				mgrprivilege=mgrprivilege(),
-				blogid=blogid, 
-				categoryid=categoryid,
-				categorys=categorys, 
-				blogs=blogs)
+				login = islogin(), 
+				mgrprivilege = mgrprivilege(),
+				blogid = blogid, 
+				categoryid = categoryid,
+				categorys = categorys, 
+				blogs = blogs)
 
 # blog list
 class bloglist:
-	def GET(self, categoryid=None, pageidx='1', pagesize='8'):
+	def GET(self, categoryid=0, pageidx='1', pagesize='8'):
+		if categoryid is None:
+			categoryid = 0
 		if pageidx is None: pageidx = 1
 		else: pageidx = int(pageidx)
 		if pagesize is None: pagesize = 40
 		else: pagesize = int(pagesize)
 		if pagesize > 100: pagesize = 40
-		print pageidx, pagesize
 		categorys = json.loads(appblog.category().GET())
 		count = json.loads(appblog.count().GET(categoryid))['count']
 		pagecount = count / pagesize + 1
@@ -148,31 +151,47 @@ class bloglist:
 		if pagecount < pageidx:
 			pageidx = 1
 		blogs = json.loads(appblog.bloglist().GET(categoryid, pageidx, pagesize))
-		mylog.loginfo(appblog.bloglist().GET(categoryid,pageidx,pagesize))
-		return render.blogview(menuname='/blog',
-				login=islogin(), 
-				mgrprivilege=mgrprivilege(),
-				blogid=None, 
-				categoryid=categoryid, 
-				categorys=categorys, 
-				blogs=blogs,
-				pagecount=pagecount,
-				pageidx=pageidx,
-				pagesize=pagesize)
+		#mylog.loginfo(appblog.bloglist().GET(categoryid,pageidx,pagesize))
+		return render.blogview(menuname = '/blog',
+				login = islogin(), 
+				mgrprivilege = mgrprivilege(),
+				blogid = None, 
+				categoryid = categoryid, 
+				categorys = categorys, 
+				blogs = blogs,
+				pagecount = pagecount,
+				pageidx = pageidx,
+				pagesize = pagesize)
 
 # resource page
 class resource:
-	def GET(self, categoryid=None, resourceid=None):
+	def GET(self, categoryid=0, pageidx='1', pagesize='8'):
+		if categoryid is None:
+			categoryid = 0
+		if pageidx is None: pageidx = 1
+		else: pageidx = int(pageidx)
+		if pagesize is None: pagesize = 40
+		else: pagesize = int(pagesize)
+		if pagesize > 100: pagesize = 40
 		categorys = json.loads(appres.category().GET())
-		resources = json.loads(appres.resource().GET(resourceid))
-		mylog.loginfo(appres.resource())
-		return render.resourceview(menuname='/resource',
+		count = json.loads(appres.count().GET(categoryid))['count']
+		pagecount = count / pagesize + 1
+		if count % pagesize == 0:
+			pagecount = pagecount - 1
+		if pagecount < pageidx:
+			pageidx = 1
+		resources = json.loads(appres.resourcelist().GET(categoryid, \
+				pageidx, pagesize))
+		return render.resourceview(menuname = '/resource',
 				login = islogin(), 
 				mgrprivilege = mgrprivilege(),
-				resourceid = resourceid, 
-				categoryid = categoryid,
+				resourceid = None, 
+				categoryid = categoryid, 
 				categorys = categorys, 
-				resources = resources)
+				resources = resources,
+				pagecount = pagecount,
+				pageidx = pageidx,
+				pagesize = pagesize)
 
 # manage blog page
 class mgrblog:
@@ -195,11 +214,19 @@ class mgrphoto:
 # manage photo page
 class mgrres:
 	def GET(self, resourceid = None):
+		categorys = json.loads(appres.category().GET())
+		resource = None
+		if resourceid:
+			resource = json.loads(appres.resource().GET(resourceid))
+			mylog.loginfo(resource)
+		mylog.loginfo(categorys)
 		return render.mgrresview(menuname = '/manage',
 				curmgrtype = '/resource',
 				login = islogin(), 
 				mgrprivilege = mgrprivilege(), 
-				resourceid = resourceid)
+				categorys = categorys,
+				resourceid = resourceid,
+				resource = resource)
 
 # manage user page
 class mgruser:

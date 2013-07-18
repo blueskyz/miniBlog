@@ -5,10 +5,11 @@
 	<div class="mgr-content">
 		<h1>资源管理</h1>
 		% if mgrprivilege:
-		<form action="xxx" class="resform" method="post" enctype="multipart/form-data"
+		<form action="" class="resform" method="post" enctype="multipart/form-data"
 			target="ifsubmit">
 			<div class="form-item" id="resourcelable">
-				<label>id:</label><label name="id"></label>
+				<label>id:</label>
+				<input type="text" name="id" value=""></input>
 			</div>
 			<div class="form-item">
 				<label>标题:</label>
@@ -21,12 +22,9 @@
 			% if resourceid is None:
 			<div class="form-item">
 				<label>上传文件:</label>
-				<input type="file" id="uploadfile" onchange="showresfile(this)" name="content"></input>
+				<input type="file" id="uploadfile" onchange="" name="content"></input>
 			</div>
 			% endif
-			<div class="form-item">
-				<a href="">pass</a>
-			</div>
 			<div class="form-item">
 				<label>权限：</label>
 				<select name="privilege">
@@ -34,6 +32,28 @@
 					<option value="0">用户可读</option>
 					<option value="1">用户读写</option>
 					<option value="2">管理员读写</option>
+				</select>
+			</div>
+			<div class="form-item" id="resourcecategory">
+				<label>分类：</label>
+				<select name="categoryid">
+				% if resourceid:
+				% for cat in categorys:
+					% if resource['category_id'] == cat['category_id']:
+					<option value="${cat['category_id']}" selected="selected">${cat["name"]}</option>
+					% else:
+					<option value="${cat['category_id']}" >${cat["name"]}</option>
+					% endif
+				% endfor
+				% else:
+				% for cat in categorys:
+					% if 0 == cat['category_id']:
+					<option value="${cat['category_id']}" selected="selected">${cat["name"]}</option>
+					% else:
+					<option value="${cat['category_id']}" >${cat["name"]}</option>
+					% endif
+				% endfor
+				% endif
 				</select>
 			</div>
 			<input type="submit" name="submit" value="提交" id="submit"></input>
@@ -49,22 +69,17 @@
 
 <%def name='loadjs()'>
 % if mgrprivilege:
-<!--
 <script type="text/javascript" src="/static/js/client.js"></script>
 <script type="text/javascript">
 	$(function(){
-			var url = "/rest/photo/";
-			% if photoid:
-			var photoid = modifyPhoto(url, ${photoid});
+			var url = "/rest/resource/";
+			% if resourceid:
+			url = modifyResource(url, ${resourceid});
 			% else:
-			var photoid = addPhoto(url);
+			url = addResource(url);
 			% endif
-			mgrPhotoAction(url, photoid);
+			mgrResAction(url);
 			});
 </script>
--->
 % endif
 </%def>
-
-<%def name="navmgrtype()">photo</%def>
-

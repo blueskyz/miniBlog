@@ -560,11 +560,11 @@ function mgrPhotoAction(url, photoid)
 			alert("内容不能为空!");
 			return false;
 			}
-			setTimeout(function(){window.location.href="/manage/photo/"}, 2000);
+			//setTimeout(function(){window.location.href="/manage/photo/"}, 2000);
 			});
 
 	$("#delete").click(url+photoid, function(event){
-			var ret = confirm("确认删除相片？");
+			var ret = confirm("确认删除照片？");
 			if(ret){
 			var url = event.data + "/delete";
 			$.ajax({url: url,
@@ -573,10 +573,73 @@ function mgrPhotoAction(url, photoid)
 				contentType: 'application/json',
 				dataType: 'json',
 				success: function(data){
-				alert(data.desc);
+				alert("成功删除照片: " + data.desc);
 				}
 				});
 			window.location.href="/manage/photo/";
+			}
+			});
+	return true;
+}
+
+//-----------------------------------------
+//  manage for resources
+function addResource(url)
+{
+	$(".resform input[name='delete']").attr("disabled", "disabled");
+	$(".resform option[value='-1']").attr("selected", "selected");
+	$(".resform").attr("action", url + "add");
+	return url;
+}
+
+function modifyResource(url, resourceid)
+{
+	url += resourceid;
+	$ .getJSON(url, function(data){
+			$(".resform input[name='id']").val(resourceid);
+			$(".resform input[name='name']").val(data["name"]);
+			$(".resform textarea[name='description']").val(data["desc"]);
+			$(".resform option[value='" + data["privilege"] + "']").attr("selected", "selected");
+			});
+	$(".resform").attr("action", url);
+	return url;
+}
+
+function mgrResAction(url)
+{
+	if (!url){
+		alert("resource's url is error!");
+		window.location.href="/";
+		return false;
+	}
+	$("#submit").click(function(){
+			var title = $(".resform input[name='name']").val();
+			if(title.length==0){
+			alert("标题不能为空!");
+			return false;
+			}
+			var desc = $(".resform textarea[name='description']").val();
+			if(desc.length==0){
+			alert("内容不能为空!");
+			return false;
+			}
+			setTimeout(function(){window.location.href="/manage/resource/"}, 2000);
+			});
+
+	$("#delete").click(url, function(event){
+			var ret = confirm("确认删除资源？");
+			if(ret){
+			var url = event.data + "/delete";
+			$.ajax({url: url,
+				async: false,
+				type: 'post',
+				contentType: 'application/json',
+				dataType: 'json',
+				success: function(data){
+				alert("成功删除资源: " + data.desc);
+				}
+				});
+			window.location.href="/manage/resource/";
 			}
 			});
 	return true;

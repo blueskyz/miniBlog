@@ -207,13 +207,13 @@ class blog:
 					db.delete("category_link", where="blog_id=" + blogid)
 				else:
 					result = db.select("category_link", what="blog_id", 
-							where="blog_id=%s" % (blogid)).list()
+							where="blog_id=%d" % (int(blogid))).list()
 					if len(result) == 0: # insert
 						db.insert("category_link", blog_id=int(blogid), 
 								category_id=data["category_id"])
 					else: # update
 						db.update("category_link", category_id=data["category_id"],
-								where="blog_id=%s" % (blogid))
+								where="blog_id=%d" % (int(blogid)))
 			elif data["action"] == "delete":
 				db.delete("blog", where="blog_id=" + blogid)
 				db.delete("category_link", where="blog_id=" + blogid)

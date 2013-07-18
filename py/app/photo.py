@@ -60,7 +60,7 @@ class photocontent:
 			curwhere = "createtime='%s' and privilege <= %d" % (photoid, privilege())
 			curlist = db.select("photo", what="name, description, privilege, image", 
 					where=curwhere).list()
-			if len(curlist) is None:
+			if len(curlist) == 0:
 				raise Exception("can't find image")
 			buf = {}
 			buf["name"] = curlist[0]["name"]

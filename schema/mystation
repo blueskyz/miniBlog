@@ -19,8 +19,14 @@ server {
 	}
 
 	location /mydb {
-		expires	10d;
+		expires	30d;
 #internal;
+		alias /opt/data/station/filedb;
+	}
+
+	location /resdata {
+		expires	30d;
+		internal;
 		alias /opt/data/station/filedb;
 	}
 

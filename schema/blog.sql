@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS resources (
 	ctime int(4) NOT NULL default 0,
 	utime int(4) NOT NULL default 0,
 	name char(255) DEFAULT NULL,
+	filename char(255) NOT NULL,
 	path char(255) DEFAULT NULL,
 	md5 char(32) NOT NULL,
 	filesize int(4) NOT NULL,
