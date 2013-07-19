@@ -158,11 +158,6 @@ class resource:
 				else:
 					self.__update__(resourceid)
 
-			# save category
-			data = web.input()
-			db.insert("res_category_link",
-					category_id = data["categoryid"],
-					resource_id = int(resourceid))
 		except Exception, err:
 			web.BadRequest()
 			web.header("content-type", "application/json")
@@ -194,7 +189,14 @@ class resource:
 		outOrgImg.write(content)
 		outOrgImg.flush()
 		outOrgImg.close()
-		return resultList[0]["resource_id"]
+
+		resourceid = resultList[0]["resource_id"]
+		# save category
+		data = web.input()
+		db.insert("res_category_link",
+				category_id = data["categoryid"],
+				resource_id = int(resourceid))
+		return resourceid
 
 	def __update__(self, resourceid):
 		curwhere = "resource_id=%d" % (int(resourceid))
@@ -205,6 +207,9 @@ class resource:
 				description=data["description"], 
 				utime=int(time.time()),
 				privilege=data["privilege"])
+		db.update("res_category_link",
+				category_id = data["categoryid"],
+				where="resource_id=%d" % (int(resourceid)))
 
 class resourcedelete:
 	def GET(self, resourceid):
@@ -247,7 +252,7 @@ class resourcelist:
 			offset = int(count)
 			start = (int(pageindex) - 1) * offset
 			query = "select resources.resource_id as resource_id, " \
-					"resources.name as name, " \
+					"resources.filename as name, " \
 					"resources.description as description, " \
 					"resources.ctime as ctime, " \
 					"resources.utime as utime, " \
@@ -294,7 +299,7 @@ class resourcelist:
 					"and res_category_link.resource_id=resources.resource_id" \
 					% (privilege(), categoryid)
 			what="resources.resource_id as resource_id, " \
-					"resources.name as name, " \
+					"resources.filename as name, " \
 					"resources.description as description, " \
 					"resources.ctime as ctime, " \
 					"resources.utime as utime, " \

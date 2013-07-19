@@ -599,7 +599,7 @@ function modifyResource(url, resourceid)
 			$(".resform input[name='id']").val(resourceid);
 			$(".resform input[name='name']").val(data["name"]);
 			$(".resform textarea[name='description']").val(data["desc"]);
-			$(".resform option[value='" + data["privilege"] + "']").attr("selected", "selected");
+			$(".resform[name='privilege'] option[value='" + data["privilege"] + "']").attr("selected", "selected");
 			});
 	$(".resform").attr("action", url);
 	return url;
