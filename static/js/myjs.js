@@ -623,7 +623,7 @@ function mgrResAction(url)
 			alert("内容不能为空!");
 			return false;
 			}
-			setTimeout(function(){window.location.href="/manage/resource/"}, 2000);
+			//setTimeout(function(){window.location.href="/manage/resource/"}, 2000);
 			});
 
 	$("#delete").click(url, function(event){
