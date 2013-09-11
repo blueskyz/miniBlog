@@ -219,33 +219,46 @@ function showBlogContent(categoryid, blogid, bEdit)
 
 //--------------------------------------
 // photo interface
+function showPhoto1()
+{
+	$('.popup-gallery').magnificPopup({ delegate: 'a',
+		type: 'image',
+	tLoading: 'Loading image #%curr%...',
+	mainClass: 'mfp-img-mobile',
+	gallery: { enabled: true,
+		navigateByImgClick: true,
+	preload: [0,1] },
+	image: { tError: '<a href="%url%">The image #%curr%</a> could not be loaded.',
+		titleSrc: function(item) {
+			return item.el.attr('title');
+		}
+	}
+	});
+}
+
 function showphotoN(photocount)
 {
 	$ .getJSON("/rest/photo/list/1/" + photocount, function(data){
-			$ ("#photo-ul").empty();
-			var curlis = "";
-			$ .each(data, function(i){
+		$ ("#photo-ul").empty();
+		var curlis = "";
+		$ .each(data, function(i){
 				var curdata = data[i];
 				var curli = "<li class='photo-li'>" +
-					"<div class='photo-list'><ul><li>" +
-					"<a class='pirobox' href='" + curdata['big-photo'] + "'>" +
-					"<img src='" + curdata['small-photo'] + 
-					"' title='" + curdata['desc'] +
-					"'></img></a></li>" +
-					"<li>" + curdata['name'] + "</li>" +
-					"<li>" + curdata['time'] + "</li>" + 
-					"<li>" + curdata['updated'] + "[U]</li>" + 
-					"</ul></div></li>";
+				"<div class='photo-list'><ul><li>" +
+				"<a href='" + curdata['big-photo'] + 
+				"' title='" + curdata['desc'] + "'>" +
+				"<img src='" + curdata['small-photo'] + 
+				"' title='" + curdata['desc'] +
+				"'></img></a></li>" +
+				"<li>" + curdata['name'] + "</li>" +
+				"<li>" + curdata['time'] + "</li>" + 
+				"<li>" + curdata['updated'] + "[U]</li>" + 
+				"</ul></div></li>";
 				curlis += curli;
 				});
 			$ ("#photo-ul").append($(curlis));
+			showPhoto1();
 
-			$ ().piroBox({my_speed: 400, //animation speed
-				bg_alpha: 0.1, //background opacity
-				slideShow : true, // true == slideshow on, false == slideshow off
-				slideSpeed : 6, //slideshow duration in seconds(3 to 6 Recommended)
-				close_all : '.piro_close,.piro_overlay'// add class .piro_overlay(with comma)if you want overlay click close piroBox
-				});
 			});
 }
 
@@ -257,33 +270,28 @@ function showphoto(usedata)
 			$ .each(data, function(i){
 				var curdata = data[i];
 				var curli = "<li class='photo-li'>" +
-					"<div class='photo-item'><ul><li>" +
-					"<a class='pirobox' href='" + curdata['big-photo'] + "'>" +
-					"<img src='" + curdata['small-photo'] + "' title='" + 
-					curdata['desc'] + "'></img></a></li>" +
-					"<li>" + curdata['name'] + "</li>" +
-					"<li>" + curdata['time'] + "</li>" + 
-					"<li>" + curdata['updated'] + "[U]</li>"; 
-					if (usedata.bedit){
-					curli += "<li><a href='/manage/photo/" + curdata['photoid'] + 
-					"'>编辑</a></li>";  
-					}
-					curli += "</ul></div></li>";
+				"<div class='photo-item'><ul><li>" +
+				"<a href='" + curdata['big-photo'] + 
+				"' title='" + curdata['desc'] + "'>" +
+				"<img src='" + curdata['small-photo'] + "' title='" + 
+				curdata['desc'] + "'></img></a></li>" +
+				"<li>" + curdata['name'] + "</li>" +
+				"<li>" + curdata['time'] + "</li>" + 
+				"<li>" + curdata['updated'] + "[U]</li>"; 
+			if (usedata.bedit){
+				curli += "<li class='photoedit' mgrlink='/manage/photo/" + curdata['photoid'] + 
+				"'>编辑</li>";  
+			}
+			curli += "</ul></div></li>";
 				curlis += curli;
 				});
-			$ ("#photo-ul").append($(curlis));
-
-			if($ (".piro_overlay").length > 0){
-			$ (".piro_overlay").remove();
-			$ (".pirobox_content").remove();
-			$ ("#imgCache").remove();
-			}
-			$ ().piroBox({my_speed: 400, //animation speed
-				bg_alpha: 0.1, //background opacity
-				slideShow : true, // true == slideshow on, false == slideshow off
-				slideSpeed : 6, //slideshow duration in seconds(3 to 6 Recommended)
-				close_all : '.piro_close,.piro_overlay'// add class .piro_overlay(with comma)if you want overlay click close piroBox
-				});
+			$("#photo-ul").append($(curlis));
+			if (usedata.bedit){
+			$(".photoedit").bind("click", 
+					function(){
+						window.location.href= $(this).attr("mgrlink");});
+					}
+			showPhoto1();
 	});
 }
 
@@ -413,7 +421,7 @@ function refreshPic(img, url){
 }
 
 function msgShow(msg, err){
-	var msgSpan = $("#login-help span");
+	var msgSpan = $(".login-help span");
 	msgSpan.hide();
 	msgSpan.text(msg);
 	if (err){
@@ -427,17 +435,17 @@ function msgShow(msg, err){
 
 function initLoginView(){
 	var imgsrc = "/rest/user/authpicture/";
-	var img = $("#authphoto");
+	var img = $(".authphoto");
 	refreshPic(img, imgsrc);
 	msgShow("输入认证信息登录。");
 
-	$("#login-form input[name='user']").focus();
+	$("#login-info form input[name='user']").focus();
 	// click change picture
 	img.click(function(){
 			refreshPic($(this), imgsrc);
 			});
 
-	$("#login-form input").bind("focus", 
+	$("#login-info input").bind("focus", 
 			function(){
 			msgShow("输入认证信息登录。");
 			});
@@ -448,7 +456,7 @@ function initLoginView(){
 		refreshPic(img, imgsrc);
 	}
 
-	function login(){
+	function userlogin(){
 		var inputName = $("#login-form input[name='user']");
 		var name= inputName.val();
 		if(name.length==0){
@@ -465,6 +473,7 @@ function initLoginView(){
 			msgShow("验证码不能为空!", "error");
 			return;
 		}
+		authstr = authstr.toLowerCase();
 		var md5sum = hex_md5(passwd + authstr);
 		var params = { "action": "login", "name": name, "authstr": authstr, "authcode": md5sum};
 
@@ -479,8 +488,63 @@ function initLoginView(){
 				error: error
 				});
 	}
-	$("#submit").bind('click', login);
-	$("#login-form input").keydown(function(event){
+	function guestlogin()
+	{
+		var inputName = $("#guest-login input[name='user']");
+		var name= inputName.val();
+		if(name.length==0){
+			msgShow("验证问题不能为空!", "error");
+			return;
+		}
+		var authstr = $("#guest-login input[name='authcode']").val();
+		if(authstr.length==0){
+			msgShow("验证码不能为空!", "error");
+			return;
+		}
+		authstr = authstr.toLowerCase();
+		var md5sum = hex_md5(name + authstr);
+		var params = { "action": "login", "name": "guest", "authstr": authstr, "authcode": md5sum};
+
+		// alert(JSON.stringify(params));
+		$.ajax({url: "/rest/user/guestlogin",
+				async: false,
+				type: "post",
+				contentType: "application/json",
+				dataType: 'json',
+				data: JSON.stringify(params),
+				success: function(){window.location.href="/";},
+				error: error
+				});
+	}
+	function login()
+	{
+		var seltype = $("#login-option input[name='login-option']:checked").val();
+		if (seltype == "user"){
+			userlogin();
+		}
+		else if (seltype == "guest"){
+			guestlogin();
+		}
+		else {
+			alert("登录类型错误！");
+		}
+	}
+	$("#login-option label").bind('click', function(){
+		var seltype = $("#login-option input[name='login-option']:checked").val();
+		if (seltype == "user"){
+			$("#login-info #guest-login").hide();
+			$("#login-info #login-form").show();
+		}
+		else if (seltype == "guest"){
+			$("#login-info #login-form").hide();
+			$("#login-info #guest-login").show();
+		}
+		else {
+			alert("登录类型错误！");
+		}
+	});
+	$(".submit").bind('click', login);
+	$("#login-info form input").keydown(function(event){
 			if (event.keyCode == 13){
 			login();
 			return false;

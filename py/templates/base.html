@@ -5,8 +5,9 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<title>逆水行舟</title>
 		<link type="text/css" href="/static/css/hot-sneaks/jquery-ui.css" rel="Stylesheet" />	
+		<link type="text/css" href="/static/css/magnific-popup.css" rel="Stylesheet" />
 		<link type="text/css" href="/static/css/my.css" rel="Stylesheet" />
-		<link href="/static/css/demo1/style.css" media="screen" title="shadow" rel="stylesheet" type="text/css" />
+		<link href="/static/css/demo2/style.css" media="screen" title="shadow" rel="stylesheet" type="text/css" />
 		${self.loadcss()}
 	</head>
 
@@ -58,8 +59,8 @@ menus.append('<a href="/about">关于</a>')
 								<li><a href="http://www.rui-yang.com/">Everybody loves Rui</a></li>
 							</ul>
 						</div>
-						<a id="scrollUp" href="#top" title="">
-						</a>
+						<a id="scrollDown" href="#my-footer" title=""></a>
+						<a id="scrollUp" href="#top" title=""></a>
 					</div>
 				</div>
 			</div>
@@ -68,18 +69,22 @@ menus.append('<a href="/about">关于</a>')
 			<p><span>&copy;2010 www.hopez.org, all rights reserved</span></p>
 		</div>
 	</body>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+	<!--
 	<script type="text/javascript" src="/static/js/jquery.js"></script>
-	<script type="text/javascript" src="/static/js/jquery.pin.js"></script>
 	<script type="text/javascript" src="/static/js/pirobox.js"></script>
+	-->
+	<script type="text/javascript" src="/static/js/jquery.pin.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.magnific-popup.min.js"></script>
 	<script type="text/javascript" src="/static/js/myjs.js"></script>
 	${self.loadjs()}
 	<script type="text/javascript">
 		$(function(){
 				var scollTop = function(info){
 				$(".pinned").pin({containerSelector: "#my-content",
-					minWidth: 940})};
+					minWidth: 940});};
 				$(scollTop);
-				$("#right-col").ajaxComplete(scollTop);
+				$(document).ajaxComplete(scollTop);
 				});
 	</script>
 	</html>

@@ -264,6 +264,11 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 	margin: 0px;
 }
 
+.photoedit {
+	color: #1D7591;
+	cursor: pointer;
+}
+
 .simple-list .photo-li {
 	float: left;
 	padding-top: 10px;
@@ -395,10 +400,17 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 }
 
 #scrollUp {
+	background-image: url("/static/image/top.png");
+}
+
+#scrollDown {
+	background-image: url("/static/image/bottom.png");
+}
+
+#scrollUp, #scrollDown{
 	background-attachment: scroll;
 	background-clip: border-box;
 	background-color: transparent;
-	background-image: url("/static/image/top.png");
 	background-origin: padding-box;
 	background-position: 0 0;
 	background-repeat: no-repeat;
@@ -407,6 +419,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 	height: 38px;
 	right: 20px;
 	width: 38px;
+	margin-left: 8px;
 	margin-top: 16px;
 	display: block;
 	float: right;
@@ -446,12 +459,11 @@ background: #EDF4F1;
 .splitpage li{
 	float: left;
 	margin-right: 0.6em;
-	padding: 0.5em;
 }
 
 .splitpage li.pageindex {
 	display: block;
-	padding: 0px;
+	padding: 4px 8px;
 	border: 1px solid #ccc;
 	cursor: pointer;
 }
@@ -565,36 +577,63 @@ background: #EDF4F1;
 }
 
 #login-info{
+	float: left;
 	width: 100%;
 	border-top: 1px dashed #3B89BA;
 }
 
-#login-form{
+#login-info>#login-option{
+	float: left;
+	margin: auto;
+	width: 130px;
+	padding: 30px;
+}
+
+#login-info>#login-option label, #login-info>#login-option input{
+	display: inline;
+	margin: 8px;
+}
+
+#login-form, #guest-login{
 	/* background: #f0efec; */
+	float: right;
 	margin: auto;
 	padding: 20px;
-	width: 300px;
+	padding-right: 60px;
+	padding-left: 60px;
+	border-left: 1px dashed #3B89BA;
+	width: 400px;
 }
 
-#login-form label, .login-item{
+#login-form {
+	display: none;
+}
+
+#login-info label, .login-item{
 	display: block;
 	width: 100%;
 }
 
-#login-form input[type='button']{
+#login-info input{
 	display: block;
-	width: 100%;
+	width: 95%;
 }
 
-#login-form #authphoto{
+#login-info input[type='button']{
+	display: block;
+	width: 95%;
+}
+
+#login-info .authphoto{
 	cursor: pointer;
+	width: 100%;
 }
 
 #login-form img{
 	margin: 10px;
 }
 
-#login-help{
+.login-help{
 	/* background: #f0efec; */
 	margin-left: 0px;
 	margin-top: 30px;
@@ -607,7 +646,7 @@ background: #EDF4F1;
 	border: 1px solid #888800;
 }
 
-#login-help span{
+.login-help span{
 	width: 100%;
 	text-align: center;
 	display: inline-block;

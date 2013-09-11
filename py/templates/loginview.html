@@ -10,6 +10,41 @@
 <div class="simple-list">
 	<h1>登录</h1>
 	<div id='login-info'>
+		<div id="login-option">
+			<div>
+				<label>
+					<input id="login-type-guest" type="radio"
+					name="login-option" value="guest" checked="checked">
+					</input>朋友登录</label>
+			</div>
+			<div>
+				<label><input id="login-type-user" type="radio"
+					name="login-option" value="user" >
+					</input>用户登录</label>
+			</div>
+		</div>
+		<form id="guest-login" action="" method="post">
+			<div class="login-item">
+				<label>我的名字是：</label>
+				<input class="input-text" type="text" name="user" value=""></input>
+			</div>
+			<div class="login-item">
+				<label>验证码：</label>
+				<input class="input-text" type="text" name="authcode" value=""></input>
+			</div>
+			<div class="login-item">
+				<label>验证图片(点击图片更换)：</label>
+				<img class="authphoto" title="点击更换图片"></img>
+			</div>
+			<div class="login-item">
+				<input class="submit" type="button" value="登录"></input>
+			</div>
+			<div class="login-item">
+				<div class="login-help">
+					<span></span>
+				</div>
+			</div>
+		</form>
 		<form id="login-form" action="" method="post">
 			<div class="login-item">
 				<label>用户名：</label>
@@ -25,13 +60,13 @@
 			</div>
 			<div class="login-item">
 				<label>验证图片(点击图片更换)：</label>
-				<img id="authphoto" title="点击更换图片"></img>
+				<img class="authphoto" title="点击更换图片"></img>
 			</div>
 			<div class="login-item">
-				<input id="submit" type="button" value="登录"></input>
+				<input class="submit" type="button" value="登录"></input>
 			</div>
 			<div class="login-item">
-				<div id="login-help">
+				<div class="login-help">
 					<span></span>
 				</div>
 			</div>

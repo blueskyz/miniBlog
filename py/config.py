@@ -46,3 +46,7 @@ filedb = "/opt/data/station/filedb/"
 print fmt_c, 'other set', fmt_c
 print 'filedb', filedb
 
+
+# guest reader
+guest_reader="张士卓"
+

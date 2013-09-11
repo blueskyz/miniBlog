@@ -17,7 +17,7 @@ for item in categorys:
 
 <div class="simple-list">
 	<h1>照片<span>风景 旅游</span><span class="morecontent"><a href="/photo">更多照片&gt;&gt;</a></span></h1>
-	<ul id="photo-ul">
+	<ul id="photo-ul" class="popup-gallery">
 	</ul>
 </div>
 
@@ -59,7 +59,31 @@ for item in categorys:
 
 <%def name='loadjs()'>
 <script type="text/javascript">
-	$(function(){showphotoN(${photocount});});
+	$(function(){
+			showphotoN(${photocount});
+			$('.popup-gallery').magnificPopup({ delegate: 'a',
+				type: 'image',
+				tLoading: 'Loading image #%curr%...',
+				mainClass: 'mfp-img-mobile',
+				gallery: { enabled: true,
+				navigateByImgClick: true,
+				preload: [0,1] },
+				image: { tError: '<a href="%url%">The image #%curr%</a> could not be loaded.',
+				titleSrc: function(item) {
+				return item.el.attr('title') + '<small>zsz</small>';
+				}
+				}
+				});
+
+			//Galleria.loadTheme('/static/js/galleria/themes/flickr/galleria.flickr.min.js');
+			//Galleria.run('#galleria');
+			// $('#galleria').data('galleria').enterFullscreen();
+/*
+			Galleria.run('#galleria', {
+				    flickr: 'search:galleria'
+					});
+					*/
+			});
 </script>
 </%def>
 

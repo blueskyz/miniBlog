@@ -21,7 +21,10 @@ class login:
 		try:
 			session = myutil.session()
 			data = json.loads(web.data())
-			if session.authcode != data["authstr"]:
+			if not data["name"].isalnum():
+				raise Exception("用户名错误.")
+
+			if session.authcode.lower() != data["authstr"].lower():
 				raise Exception("验证码错误:" + session.authcode)
 			query = "name='%s'" % (data["name"])
 			lsuser = db.select("users", where=query, 
@@ -29,7 +32,7 @@ class login:
 			web.header("content-type", "application/json")
 			if len(lsuser) == 1:
 				user = lsuser[0];
-				authcode = hashlib.md5(user["passwd"] + session.authcode)
+				authcode = hashlib.md5(user["passwd"] + session.authcode.lower())
 				if authcode.hexdigest() == data["authcode"]:
 					session.privilege = user["privilege"]
 					web.setcookie("id", data["authcode"], expires=3600)
@@ -39,6 +42,29 @@ class login:
 			else:
 				raise Exception("用户名错误")
 			return '{"desc": "error"}'
+		except Exception, err:
+			myutil.session().authcode = pic.picChecker().getPicString()
+			web.BadRequest()
+			web.header("content-type", "application/json")
+			return '{"desc": "%s"}' % (err)
+
+class guestlogin:
+	def GET(self, userid=None):
+		pass
+
+	def POST(self):
+		try:
+			session = myutil.session()
+			data = json.loads(web.data())
+			if session.authcode.lower() != data["authstr"].lower():
+				raise Exception("验证码错误:" + session.authcode)
+			guestpasswd = hashlib.md5(config.guest_reader + session.authcode.lower())
+			if data["authcode"] == guestpasswd.hexdigest():
+				session.privilege = 0
+				web.setcookie("id", data["authcode"], expires=3600)
+				return '{"desc": "success"}'
+			else:
+				raise Exception("验证错误")
 		except Exception, err:
 			myutil.session().authcode = pic.picChecker().getPicString()
 			web.BadRequest()
@@ -63,7 +89,7 @@ class user:
 				raise Exception("privilege is error")
 			squery = ("select user_id, name, localname, email, "
 					"mobile_phone, description, privilege from users "
-					"where user_id='%s'") % (userid)
+					"where user_id='%d'") % (int(userid))
 			curlist = db.query(squery).list()
 			if len(curlist) != 1:
 				raise Exception("find user is not one.[%d]" % (len(curlist)))
@@ -126,6 +152,7 @@ class authpicture:
 
 
 urls = ("/login", "login",
+		"/guestlogin", "guestlogin",
 		"/logout", "logout",
 		"/([0-9]{0,3}){0,1}/?", "user",
 		"/authpicture/([1-9][0-9]{9})/?", "authpicture",
