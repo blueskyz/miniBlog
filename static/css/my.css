@@ -47,7 +47,8 @@ h1 {
 }
 
 h1 span {
-	color: #666666;
+	/* color: #666666; */
+	color: #FFFFFF;
     font-size: 12px;
     font-weight: normal;
     margin-left: 10px;
@@ -77,8 +78,9 @@ body {
 	 background-clip: border-box;
 	 background-origin: padding-box;
 	 background-size: auto auto;
-	 */
 	background: #E5ECCA;
+	 */
+	background: #FFFFFF;
 	margin: 0px;
 }
 
@@ -119,7 +121,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 	 background-repeat: no-repeat;
 	 background-position: left top;
 	 */
-	background-color: #6aa;
+	background-color: #006666;
 	width: 100%;
 	height: 80px;
 	opacity: 1.0;
@@ -229,6 +231,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 	width: 718px;
 	margin-top: 16px;
 	margin-bottom: 5px;
+	/*
 	background: #FFFFFF;
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
@@ -236,6 +239,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 	-webkit-box-shadow: 3px 3px 6px #666; 
 	-moz-box-shadow: 3px 3px 6px #666; 
 	box-shadow: 3px 3px 6px #666;
+	*/
 	min-height: 400px;
 	height: auto !important;
 	height: 100px;
@@ -250,17 +254,23 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 }
 
 .simple-list h1 {
+	/* background-color: #669999; */
+	font-style: italic;
+	color: #FFCC00;
+	background-color: #669999;
 	padding-left: 10px;
-	padding-top: 16px;
-	padding-bottom: 16px;
+	padding-top: 8px;
+	padding-bottom: 8px;
 	margin-left: 4px;
 	margin-right: 4px;
+	margin-bottom: 12px;
 	/* border-bottom: 2px solid #656f7a; */
 }
 
 .simple-list ul {
 	list-style: none;
 	padding: 5px;
+	padding-top: 0px;
 	margin: 0px;
 }
 
@@ -286,6 +296,10 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 	margin-right: 4px;
 }
 
+.morecontent a{
+	color: #FFFFFF;
+}
+
 .categoryattr {
 	float: right;
 	margin-right: 1em;
@@ -298,7 +312,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 .mgr-content form{
 	padding: 10px;
 	margin: 20px;
-	border: 1px solid #3B89BA;
+	border: 1px solid #339933;
 }
 
 /*
@@ -342,7 +356,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 .photo-li img {
 	-webkit-box-shadow: 3px 3px 6px #666; 
 	-moz-box-shadow: 3px 3px 6px #666; 
-	box-shadow: 3px 3px 6px #666;
+	/* box-shadow: 3px 3px 6px #666; */
 }
 
 .blog-item, .resource-item {
@@ -375,19 +389,21 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 
 .simple-list .blog-li, .simple-list .resource-li {
 	border: 1px solid #fff;
-	border-top: 1px dashed #3B89BA;
+	border-top: 1px dashed #339933;
 	padding-top: 8px;
 	padding-bottom: 6px;
 	margin-bottom: 10px;
 	/* background: #EDF4F1; */
 }
 
+/*
 .simple-list .blog-item:hover, .simple-list .resource-item:hover {
 	border: 2px solid #FFAC4D;
 }
+*/
 
 .simple-list #photo-ul {
-	border-top: 1px dashed #3B89BA;
+	border-top: 1px dashed #339933;
 }
 
 .simple-list #photo-ul:after {
@@ -396,7 +412,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 	display: block;
 	height: 0px;
 	visibility: hidden;
-	border-top: 1px dashed #3B89BA;
+	border-top: 1px dashed #339933;
 }
 
 #scrollUp {
@@ -505,7 +521,8 @@ background: #EDF4F1;
  */
 #my-main {
 	float: left;
-	width: 720px;
+	width: 730px;
+	border-right: 1px dashed #339933;
 }
 
 #my-side {
@@ -516,7 +533,7 @@ background: #EDF4F1;
 
 #right-col {
 	float: right;
-	width: 220px;
+	width: 200px;
 }
 
 .widget-side {
@@ -538,7 +555,7 @@ background: #EDF4F1;
 	margin-top: 0px;
 	margin-left: 0px;
 	margin-bottom: 10px;
-	background-color: #0d5995;
+	background-color: #669999;
 	color: #ffffff;
 	padding: 5px;
 	-moz-border-radius: 8px 8px 8px 8px;
@@ -578,14 +595,16 @@ background: #EDF4F1;
 
 #login-info{
 	float: left;
-	width: 100%;
-	border-top: 1px dashed #3B89BA;
+	width: 98%;
+	margin-left: 8px;
+	margin-right: 10px;
+	border: 1px solid #339933;
 }
 
 #login-info>#login-option{
 	float: left;
 	margin: auto;
-	width: 130px;
+	width: 120px;
 	padding: 30px;
 }
 
@@ -601,7 +620,7 @@ background: #EDF4F1;
 	padding: 20px;
 	padding-right: 60px;
 	padding-left: 60px;
-	border-left: 1px dashed #3B89BA;
+	border-left: 1px dashed #339933;
 	width: 400px;
 }
 
@@ -662,14 +681,13 @@ background: #EDF4F1;
 }
 
 #userform #new, #userform #delete, #userform #submit{
-	float: left;
 	width: auto;
 	margin-right: 10px;
 }
 
 #my-footer {
 	clear: both;
-	background-color: #6aa;
+	background-color: #006666;
 	/*
 	float: left;
 	background-repeat: no-repeat;
