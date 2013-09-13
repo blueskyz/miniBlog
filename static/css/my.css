@@ -576,16 +576,18 @@ background: #EDF4F1;
 }
 
 .widget-side ul a:before {
+	padding-left: 8px;
 	content: "";
 	padding-right: 1.5em;
 }
 
 .widget-side ul li.selected a:before {
+	padding-left: 0px;
     color: #40495B;
     font-weight: bold;
 	/* content: "=>"; */
 	padding-right: 0.3em;
-	content: "@ ";
+	content: "@";
 }
 
 .widget-side ul li.selected a {

@@ -33,8 +33,8 @@ urls = (# rest
 		"/rest/user", appuser.app_user,
 
 		# page
-		"/photo/?", "photo",
 		"/login/?", "login",
+		"/photo/?([0-9]{0,4})/?", "photo",
 		"/blog/([0-9]{1,2}){1}/([1-9][0-9]{9}){1}/?", "blog",
 		"/blog/?([0-9]{1,2}){0,1}/?([1-9][0-9]{0,1}){0,1}/?([1-9][0-9]{0,1}){0,1}/?", "bloglist",
 		"/resource/?([0-9]{1,2}){0,1}/?([1-9][0-9]{0,1}){0,1}/?([1-9][0-9]{0,1}){0,1}/?", "resource",
@@ -113,10 +113,14 @@ class login:
 
 # photo page
 class photo:
-	def GET(self):
+	def GET(self, categoryid = '0'):
+		if len(categoryid) == 0 : categoryid = '0'
+		categorys = json.loads(appphoto.category().GET())
 		return render.photoview(menuname='/photo',
 				login = islogin(), 
 				mgrprivilege = mgrprivilege(), 
+				categoryid = categoryid,
+				categorys = categorys, 
 				photocount = 40)
 
 # blog page

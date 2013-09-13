@@ -27,27 +27,6 @@ ORIENTATIONS = {
 		}
 
 class photo:
-	def GET(self, photoid, scale):
-		itype = {0:"image/jpeg", 1:"image/png"}
-		itypename = {0: "jpeg", 1:"png"}
-		try:
-			curwhere = "createtime='%s' and privilege <= %d" % (photoid, privilege())
-			curlist = db.select("photo", what="image, imagetype", 
-					where=curwhere).list()
-			if len(curlist) == 0:
-				raise Exception("can't find image")
-			buf = curlist[0]["image"]
-			imagetype = curlist[0]["imagetype"]
-			scale = int(scale)
-			if scale != 1:
-				buf = self.__getscalephoto__(itypename[imagetype], buf, scale)
-			web.header('content-type', itype[imagetype])
-			return buf
-		except Exception, err:
-			web.BadRequest()
-			web.header("content-type", "application/json")
-			return '{"desc": "%s"}' % (err)
-
 	def SaveImageToScale(self, photoid, scale, srcdir, dstdir):
 		itype = {0:"image/jpeg", 1:"image/png"}
 		itypename = {0: "jpeg", 1:"png"}
@@ -58,6 +37,7 @@ class photo:
 			cur.execute(sql)
 			print sql
 			record = cur.fetchone()
+			count = 0
 			while record is not None:
 				(image, imagetype) = record
 				imageFile = open( srcdir + '/' + image, 'r+b' )
@@ -67,11 +47,12 @@ class photo:
 				filePath = '%s/%d/%s' % ( dstdir, scale, image )
 				if path.exists( path.dirname(filePath) ) is False:
 					os.makedirs( path.dirname(filePath) )
-				print 'write image:', filePath
+				print 'write image:', filePath, " count: ", count
 				imageFile = open( filePath, 'w+b' )
 				imageFile.write( buf )
 				imageFile.close( )
 				record = cur.fetchone()
+				count += 1
 		except Exception, err:
 			return '{"desc": "%s"}' % (err)
 
@@ -81,8 +62,9 @@ class photo:
 			outstr = StringIO.StringIO()
 			im = Image.open(fstr)
 			rate = float(scale)/float(im.size[1])
-			size = (im.size[0] * rate, im.size[1] * rate)
+			size = (int(im.size[0] * rate), int(im.size[1] * rate))
 			im = self.__fix_orientation__(im)
+			print size
 			im.thumbnail(size, Image.ANTIALIAS)
 			im.save(outstr, imagetype)
 			retdata = outstr.getvalue()
@@ -90,9 +72,7 @@ class photo:
 			fstr.close()
 			return retdata
 		except Exception, err:
-			web.BadRequest()
-			web.header("content-type", "application/json")
-			return '{"desc": "%s"}' % (err)
+			raise Exception("__getscalephoto__: " + err.message)
 
 	def __fix_orientation__(self, im):
 		try:
@@ -106,5 +86,6 @@ class photo:
 
 if __name__ == '__main__':
 	obj = photo()
-	ret = obj.SaveImageToScale(0, 600, '/opt/data/station/filedb/photo/org', '/opt/data/station/filedb/photo')
+	ret = obj.SaveImageToScale(1277020143, 600, './preimport/org', './preimport')
+	ret = obj.SaveImageToScale(1277020143, 80, './preimport/org', './preimport')
 	print ret

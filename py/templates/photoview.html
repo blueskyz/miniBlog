@@ -1,9 +1,29 @@
 <%inherit file='base.html' />
 
+<%doc>
 <%def name="category()">
 <h4>分类</h4>
 <ul>
 <li>暂无</li>
+</ul>
+</%def>
+<a href='/photo/${item["category_id"]}'>${item['name']}  (${item['count']})</a>
+% if item['category_id'] == int(categoryid):
+</%doc>
+
+
+<%def name="category()">
+<h4>分类</h4>
+<ul id="photocategory">
+% for item in categorys:
+% if item['category_id'] == int(categoryid):
+<li class="selected">
+% else:
+<li>
+% endif
+<a href='/photo/${item["category_id"]}'>${item['name']}  (${item['count']})</a>
+</li>
+% endfor
 </ul>
 </%def>
 
@@ -20,7 +40,12 @@
 	% if mgrprivilege:
 	bedit = true;
 	% endif
-	$(function(){splitpage("/rest/photo/", "/rest/photo/list/", 
-				1, ${photocount}, 6, {bedit: bedit}, showphoto);});
+	$(function(){splitpage("/rest/photo/count/${categoryid}/", 
+				"/rest/photo/list/${categoryid}/", 
+				1, 
+				${photocount}, 
+				6, 
+				{bedit: bedit}, 
+				showphoto);});
 </script>
 </%def>

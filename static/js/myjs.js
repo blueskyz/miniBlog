@@ -219,7 +219,7 @@ function showBlogContent(categoryid, blogid, bEdit)
 
 //--------------------------------------
 // photo interface
-function showPhoto1()
+function showPhotoMovie()
 {
 	$('.popup-gallery').magnificPopup({ delegate: 'a',
 		type: 'image',
@@ -238,7 +238,7 @@ function showPhoto1()
 
 function showphotoN(photocount)
 {
-	$ .getJSON("/rest/photo/list/1/" + photocount, function(data){
+	$ .getJSON("/rest/photo/list/0/1/" + photocount, function(data){
 		$ ("#photo-ul").empty();
 		var curlis = "";
 		$ .each(data, function(i){
@@ -257,7 +257,7 @@ function showphotoN(photocount)
 				curlis += curli;
 				});
 			$ ("#photo-ul").append($(curlis));
-			showPhoto1();
+			showPhotoMovie();
 
 			});
 }
@@ -291,7 +291,7 @@ function showphoto(usedata)
 					function(){
 						window.location.href= $(this).attr("mgrlink");});
 					}
-			showPhoto1();
+			showPhotoMovie();
 	});
 }
 

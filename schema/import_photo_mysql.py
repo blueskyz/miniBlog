@@ -146,7 +146,7 @@ class PhotoMgr:
 if __name__ == r'__main__':
 	try:
 		#photoObject = PhotoMgr( r'/resource/downloads/tmpphoto', r'./myphoto.dat' )
-		photoObject = PhotoMgr( r'/resource/photo/20101104', r'./preimport' )
+		photoObject = PhotoMgr( r'/resource/photo', r'./preimport/org' )
 		photoObject.ImportPhoto( )
 	except Exception, err:
 		print err

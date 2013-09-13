@@ -39,9 +39,15 @@ class rephoto:
 	def GET(self): raise web.seeother('/')
 
 class photocount:
-	def GET(self):
+	def GET(self, categoryid='0'):
 		try:
+			if len(categoryid) == 0:
+				categoryid = 0
+			else:
+				categoryid = int(categoryid);
 			curwhere = "privilege <= %d" % (privilege())
+			if categoryid != 0:
+				curwhere = "privilege <= %d and year=%d" % (privilege(), categoryid)
 			curset = db.select("photo", what="count(createtime) as total", 
 					where=curwhere).list()
 			#query = ("select count(createtime) as total from photo "
@@ -79,7 +85,7 @@ class photocontent:
 		try:
 			if privilege() < 1:
 				raise Exception("privilege is error")
-			curwhere = "createtime='%s'" % (photoid)
+			curwhere = "createtime='%d'" % (int(photoid))
 			curlist = db.select("photo", what="createtime", where=curwhere).list()
 			newId = photoid
 			if len(curlist) == 0:
@@ -97,12 +103,13 @@ class photocontent:
 		content = buffer(data["content"])
 		fstr = StringIO.StringIO(content)
 		(newphotoid, imgtypeStr) = self.__imgid__(photoid, fstr)
-		timeInfo = time.localtime(int(photoid))
+		timeInfo = time.localtime(int(newphotoid))
 		imgExt = "jpg"
 		if imgtypeStr == "png":
 			imgExt = ".png"
 		imagePath = "%d/%d/%d.%s" % (timeInfo.tm_year, timeInfo.tm_mon, newphotoid, imgExt)
 		db.insert("photo", createtime=newphotoid, name=data["name"],
+				year=timeInfo.tm_year, month=timeInfo.tm_mon,
 				description=data["description"], updated=int(time.time()),
 				imagetype=itype[imgtypeStr], image=imagePath,
 				privilege=data["privilege"])
@@ -124,7 +131,7 @@ class photocontent:
 		self.__createScalcPhotoFile__(imgtypeStr, content, 80, photoPath_80)
 
 	def __update__(self, photoid):
-		curwhere = "createtime='%s'" % (photoid)
+		curwhere = "createtime='%d'" % (int(photoid))
 		data = web.input()
 		db.update("photo", where=curwhere, name=data["name"], 
 				description=data["description"], updated=int(time.time()),
@@ -268,11 +275,17 @@ class photo:
 			return im
 
 class photolist:
-	def GET(self, pageindex=1, count=8):
+	def GET(self, categoryid= '0', pageindex=1, count=8):
 		try:
+			if len(categoryid) == 0:
+				categoryid = 0
+			else:
+				categoryid = int(categoryid);
 			offset = int(count)
 			start = (int(pageindex) - 1) * offset
 			curwhere = "privilege <= %d" % (privilege())
+			if categoryid != 0:
+				curwhere = "privilege <= %d and year=%d" % (privilege(), categoryid)
 			order = "createtime desc"
 			curlist = db.select("photo", 
 					what="createtime, name, description, updated, image",
@@ -299,14 +312,42 @@ class photolist:
 			web.header("content-type", "application/json")
 			return '{"desc": "%s"}' % (err)
 
+class category:
+	def GET(self):
+		try:
+			categorylist = []
+			# all category
+			curwhere = "privilege <= %d" % (privilege())
+
+			# other category
+			curlist = db.select("photo", what="year, count(year) as count", 
+					group='year', order='year', where=curwhere).list()
+			total = 0
+			for item in curlist:
+				category = {}
+				category["category_id"] = item["year"]
+				category["name"] = str(item["year"]) + "年"
+				category["description"] = category["name"]
+				category["count"] = item["count"]
+				categorylist.append(category)
+				total += category["count"]
+			category = {"count": total, "category_id": 0, 
+					"name": u"所有照片", "description": u"所有志"}
+			categorylist.append(category)
+			categorylist.reverse()
+			return json.dumps(categorylist, ensure_ascii=False)
+		except Exception, err:
+			web.BadRequest()
+			return '{"desc": "%s"}' % (err)
 
 urls = (# rest router
-		"/list/([1-9][0-9]{0,2})/([1-9][0-9]{0,1})/?", "photolist",
+		"/list/([0-9]{1,4})/([1-9][0-9]{0,2})/([1-9][0-9]{0,1})/?", "photolist",
 		"/([1-9][0-9]{9})/([0-9]{1,4})/?", "photo",
 		"/([1-9][0-9]{9})/?", "photocontent",
 		"/([1-9][0-9]{9})/delete/?", "photodelete",
+		"/category/?", "category",
 		"", "rephoto",
-		"/", "photocount")
+		"/count/([0-9]{1,4})/?", "photocount")
 
 app_photo = web.application(urls, globals(), autoreload=config.autoreload)
 
