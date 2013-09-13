@@ -20,19 +20,19 @@ import time
 import Image
 
 class PhotoMgr:
-	def __init__( self, dir = None, sqliteFilePath = None, fileFilterExt = ['.jpg', '.png'] ):
-		if dir is None:
-			raise Exception( r'dir or sqliteFilePath is empty!' )
+	def __init__( self, dir = None, destPath = None, fileFilterExt = ['.jpg', '.png'] ):
+		print "dir: ", dir, " destPath: ", destPath
+		if dir is None or destPath is None:
+			raise Exception( r'dir or destPath is empty!' )
 		self.__dir = dir
-		self.__sqliteFilePath = sqliteFilePath
+		self.__destPath = destPath
 		self.__fileFilterExt = fileFilterExt
-		print self.__dir, self.__sqliteFilePath
+		print self.__dir, self.__destPath
 
 	def ImportPhoto( self ):
 		""" Get photo list from dir. """
 		timeline = 0
 		try:
-			#conn = sqlite.connect( self.__sqliteFilePath )
 			conn = mysql.connect( user='webadmin', passwd='webadmin791127', db='myblog', charset='utf8')
 			cur = conn.cursor();
 			cur.execute("select createtime from photo "
@@ -47,8 +47,8 @@ class PhotoMgr:
 			print err
 			return
 
-		if not path.isdir( self.__dir ) or not path.isfile( self.__sqliteFilePath ):
-			raise Exception( r'dir is not directory or sqliteFilePath is not file!' )
+		if not path.isdir( self.__dir ) or not path.isdir( self.__destPath):
+			raise Exception( r'dir is not directory or destPath is not directory!' )
 		photoFileMap = {}
 		dirList = [ self.__dir ]
 		nFileCount = 0
@@ -78,46 +78,6 @@ class PhotoMgr:
 		print r'total:  ', nFileCount
 		print r'available:  ', len( photoFileMap )
 
-	def SaveAllPhotoToFile( self, imageFilePath ):
-		try:
-			conn_mysql = mysql.connect( host='127.0.0.1', 
-					user='webadmin', passwd='webadmin791127', db='myblog', charset='utf8')
-			cur_mysql = conn_mysql.cursor()
-			conn = sqlite.connect( self.__sqliteFilePath )
-			cur = conn.cursor()
-			cur.execute( "select createtime, year, month, name, description, imagetype, privilege, updated, image from photo" )
-			record = cur.fetchone( )
-			typeMap = { 0:'.jpg', 1:'.png' }
-			while record is not None:
-				( createtime, year, month, name, description, imagetype, privilege, updated, image ) = record
-				print "----------------------------------------"
-				print "CreateTime:  ", createtime, type(createtime)
-				print "Year:  ", year
-				print "Month:  ", month
-				print "Name:  ", name
-				print "Description:  ", description
-				print "ImageType:  ", imagetype
-				filePath = '%s/%s/%s/' % ( imageFilePath, year, month )
-
-				# save mysql
-				urlFilePath = '%d/%d/%d%s' % ( year, month, createtime, typeMap[imagetype] )
-				print urlFilePath
-				values = ( createtime, year, month, name, description, imagetype, urlFilePath, privilege, updated)
-				cur_mysql.execute("insert into photo( createtime, year, month, name, description, imagetype, image, privilege, updated) values( %s,%s,%s,%s,%s,%s,%s,%s,%s )", values )
-
-				# save file
-				if path.exists( filePath ) is False:
-					os.makedirs( filePath )
-				imageFile = open( filePath + str( createtime ) + typeMap[imagetype], 'w+b' )
-				imageFile.write( image )
-				imageFile.close( )
-				record = cur.fetchone( )
-			cur.close()
-			conn.close()
-			cur_mysql.close()
-			conn_mysql.close()
-		except Exception, err:
-			print err
 
 	def __phototime( self, filepath ):
 		#fileStat = os.stat( filepath )
@@ -136,7 +96,6 @@ class PhotoMgr:
 	def __SavePhotoToDB( self, photoFileMap ):
 		""" Save photo to database. """
 		try:
-			#conn = sqlite.connect( self.__sqliteFilePath )
 			conn = mysql.connect( host='127.0.0.1', user='webadmin', passwd='webadmin791127', db='myblog', charset='utf8')
 			cur = conn.cursor( )
 
@@ -156,12 +115,27 @@ class PhotoMgr:
 				#print "Name:  ", name
 				#print "Description:  ", description
 				#print "ImageType:  ", type, typeMap[type]
-				imageFilePath = '%s/%s/%d%s' % ( year, month, modifyTimeStat, type )
-				print "image path: ", imageFilePath
+
+				print "image src path: ", filePath
+				# read src image file
 				imageFile = open( filePath, 'r+b' )
+				imageContent = imageFile.read(-1)
+				imageFile.close()
+
+				# save file
+				imageFilePath = '%s/%s/%d%s' %(year, month, modifyTimeStat, type)
+				destFilePath = '%s/%s/%s/' % ( self.__destPath, year, month )
+				if path.exists( destFilePath ) is False:
+					os.makedirs( destFilePath )
+				destFilePath = destFilePath + str(modifyTimeStat) + type
+				print "image dest Path: ", destFilePath 
+				imageDestFile = open( destFilePath, 'w+b' )
+				imageDestFile.write( imageContent )
+				imageDestFile.close( )
+				
+				# save db
 				values = ( modifyTimeStat, year, month, name, description, typeMap[type], imageFilePath, modifyTimeStat)
 				cur.execute("insert into photo( createtime, year, month, name, description, imagetype, image, updated) values( %s,%s,%s,%s,%s,%s,%s,%s )", values )
-				imageFile.close( )
 			conn.commit( )
 			cur.close( )
 			conn.close( )
@@ -172,9 +146,8 @@ class PhotoMgr:
 if __name__ == r'__main__':
 	try:
 		#photoObject = PhotoMgr( r'/resource/downloads/tmpphoto', r'./myphoto.dat' )
-		photoObject = PhotoMgr( r'/resource/photo', r'./photo.dat' )
-		#photoObject.ImportPhoto( )
-		photoObject.SaveAllPhotoToFile( "/resource/photo/" )
+		photoObject = PhotoMgr( r'/resource/photo/20101104', r'./preimport' )
+		photoObject.ImportPhoto( )
 	except Exception, err:
 		print err
 
