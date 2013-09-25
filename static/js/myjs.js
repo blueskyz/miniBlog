@@ -240,11 +240,14 @@ function showphotoN(photocount)
 {
 	$ .getJSON("/rest/photo/list/0/1/" + photocount, function(data){
 		$ ("#photo-ul").empty();
-		var curlis = "";
+		var curlis = "<div class='photo-row'>";
 		$ .each(data, function(i){
+				if (i != 0 && 0 == i%4){
+					curlis += "</div><div class='photo-row'>";
+				}
 				var curdata = data[i];
 				var curli = "<li class='photo-li'>" +
-				"<div class='photo-list'><ul><li>" +
+				"<div class='photo-item'><ul><li>" +
 				"<a href='" + curdata['big-photo'] + 
 				"' title='" + curdata['desc'] + "'>" +
 				"<img src='" + curdata['small-photo'] + 
@@ -252,10 +255,11 @@ function showphotoN(photocount)
 				"'></img></a></li>" +
 				"<li>" + curdata['name'] + "</li>" +
 				"<li>" + curdata['time'] + "</li>" + 
-				"<li>" + curdata['updated'] + "[U]</li>" + 
+				// "<li>" + curdata['updated'] + "[U]</li>" + 
 				"</ul></div></li>";
 				curlis += curli;
 				});
+			curlis += "</div>";
 			$ ("#photo-ul").append($(curlis));
 			showPhotoMovie();
 
@@ -266,8 +270,11 @@ function showphoto(usedata)
 {
 	$ .getJSON(usedata.url, function(data){
 			$ ("#photo-ul").empty();
-			var curlis = "";
+			var curlis = "<div class='photo-row'>";
 			$ .each(data, function(i){
+				if (i != 0 && 0 == i%4){
+					curlis += "</div><div class='photo-row'>";
+				}
 				var curdata = data[i];
 				var curli = "<li class='photo-li'>" +
 				"<div class='photo-item'><ul><li>" +
@@ -276,8 +283,8 @@ function showphoto(usedata)
 				"<img src='" + curdata['small-photo'] + "' title='" + 
 				curdata['desc'] + "'></img></a></li>" +
 				"<li>" + curdata['name'] + "</li>" +
-				"<li>" + curdata['time'] + "</li>" + 
-				"<li>" + curdata['updated'] + "[U]</li>"; 
+				"<li>" + curdata['time'] + "</li>"; 
+				// "<li>" + curdata['updated'] + "[U]</li>"; 
 			if (usedata.bedit){
 				curli += "<li class='photoedit' mgrlink='/manage/photo/" + curdata['photoid'] + 
 				"'>编辑</li>";  
@@ -285,6 +292,7 @@ function showphoto(usedata)
 			curli += "</ul></div></li>";
 				curlis += curli;
 				});
+			curlis += "</div>";
 			$("#photo-ul").append($(curlis));
 			if (usedata.bedit){
 			$(".photoedit").bind("click", 

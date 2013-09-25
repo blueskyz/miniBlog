@@ -298,10 +298,10 @@ class photolist:
 				photo["photoid"] = photoiter["createtime"]
 				photo["name"] = photoiter["name"]
 				photo["desc"] = photoiter["description"]
-				photo["time"] = time.strftime("%Y-%m-%d", 
+				photo["time"] = time.strftime("%Y.%m.%d", 
 						time.localtime(photoiter["createtime"]))
-				photo["updated"] = time.strftime("%Y-%m-%d",
-						time.localtime(photoiter["updated"]))
+				#photo["updated"] = time.strftime("%Y-%m-%d",
+				#		time.localtime(photoiter["updated"]))
 				photo["small-photo"] = "/mydb/photo/80/%s" % (photoiter["image"])
 				photo["big-photo"] = "/mydb/photo/600/%s" % (photoiter["image"])
 				photolist.append(photo)
