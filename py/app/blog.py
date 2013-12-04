@@ -12,6 +12,7 @@ import myutil
 
 db = myutil.db
 privilege = myutil.privilege
+neweditstyle = 1386144784
 
 class reblog:
 	def GET(self): raise web.seeother('/')
@@ -59,7 +60,10 @@ class bloglist:
 				blogitem = {}
 				blogitem["blogid"] = item["blog_id"]
 				blogitem["title"] = item["title"]
-				blogitem["summary"] = wiki.wiki2html(item["summary"], False)
+				if item["published"] > neweditstyle:
+					blogitem["summary"] = wiki.wiki2html(item["summary"], False)
+				else:
+					blogitem["summary"] = item["summary"]
 				blogitem["published"] = time.strftime("%Y-%m-%d %H:%M:%S" , 
 						time.localtime(item["published"]))
 				blogitem["updated"] = time.strftime("%Y-%m-%d %H:%M:%S" , 
@@ -92,7 +96,10 @@ class bloglist:
 				blogitem = {}
 				blogitem["blogid"] = item["blog_id"]
 				blogitem["title"] = item["title"]
-				blogitem["summary"] = wiki.wiki2html(item["summary"], False)
+				if item["published"] > neweditstyle:
+					blogitem["summary"] = wiki.wiki2html(item["summary"], False)
+				else:
+					blogitem["summary"] = item["summary"]
 				blogitem["published"] = time.strftime("%Y-%m-%d %H:%M:%S" , 
 						time.localtime(item["published"]))
 				blogitem["updated"] = time.strftime("%Y-%m-%d %H:%M:%S" , 
@@ -148,7 +155,7 @@ class category:
 
 
 class blog:
-	def GET(self, blogid=None, inserv=False):
+	def GET(self, blogid=None, isrenderwiki=False):
 		try:
 			query = ("select blog.blog_id as blog_id, blog.title as title, " \
 					"blog.summary as summary, blog.published as published, " \
@@ -167,7 +174,7 @@ class blog:
 			blogitem = {}
 			blogitem["blogid"] = item["blog_id"]
 			blogitem["title"] = item["title"]
-			if inserv:
+			if isrenderwiki and item["published"] > neweditstyle:
 				blogitem["summary"] = wiki.wiki2html(item["summary"], False)
 				blogitem["content"] = wiki.wiki2html(item["content"], False)
 			else:
