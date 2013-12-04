@@ -561,9 +561,11 @@ background: #EDF4F1;
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 	border-radius: 8px;
+	/*
 	-webkit-box-shadow: 3px 3px 6px #666; 
 	-moz-box-shadow: 3px 3px 6px #666; 
-	/* box-shadow: 3px 3px 6px #666; */
+	box-shadow: 3px 3px 6px #666;
+	*/
 }
 
 .widget-side h4 {
