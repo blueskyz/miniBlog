@@ -5,6 +5,7 @@ import datetime
 import time
 import json
 import web
+import mediawiki as wiki
 
 import config
 import myutil
@@ -58,7 +59,7 @@ class bloglist:
 				blogitem = {}
 				blogitem["blogid"] = item["blog_id"]
 				blogitem["title"] = item["title"]
-				blogitem["summary"] = item["summary"]
+				blogitem["summary"] = wiki.wiki2html(item["summary"], False)
 				blogitem["published"] = time.strftime("%Y-%m-%d %H:%M:%S" , 
 						time.localtime(item["published"]))
 				blogitem["updated"] = time.strftime("%Y-%m-%d %H:%M:%S" , 
@@ -91,7 +92,7 @@ class bloglist:
 				blogitem = {}
 				blogitem["blogid"] = item["blog_id"]
 				blogitem["title"] = item["title"]
-				blogitem["summary"] = item["summary"]
+				blogitem["summary"] = wiki.wiki2html(item["summary"], False)
 				blogitem["published"] = time.strftime("%Y-%m-%d %H:%M:%S" , 
 						time.localtime(item["published"]))
 				blogitem["updated"] = time.strftime("%Y-%m-%d %H:%M:%S" , 
@@ -147,7 +148,7 @@ class category:
 
 
 class blog:
-	def GET(self, blogid=None):
+	def GET(self, blogid=None, inserv=False):
 		try:
 			query = ("select blog.blog_id as blog_id, blog.title as title, " \
 					"blog.summary as summary, blog.published as published, " \
@@ -166,12 +167,17 @@ class blog:
 			blogitem = {}
 			blogitem["blogid"] = item["blog_id"]
 			blogitem["title"] = item["title"]
-			blogitem["summary"] = item["summary"]
+			if inserv:
+				blogitem["summary"] = wiki.wiki2html(item["summary"], False)
+				blogitem["content"] = wiki.wiki2html(item["content"], False)
+			else:
+				blogitem["summary"] = item["summary"]
+				blogitem["content"] = item["content"]
+
 			blogitem["published"] = time.strftime("%Y-%m-%d %H:%M:%S" , 
 					time.localtime(item["published"]))
 			blogitem["updated"] = time.strftime("%Y-%m-%d %H:%M:%S" , 
 					time.localtime(item["updated"]))
-			blogitem["content"] = item["content"]
 			blogitem["privilege"] = item["privilege"]
 			blogitem["category_id"] = 0
 			if item["category_id"] is not None:

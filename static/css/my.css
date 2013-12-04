@@ -227,7 +227,9 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 }
 
 .simple-list {
-	float: left;
+	/*
+	 float: left;
+	 */
 	width: 718px;
 	margin-top: 16px;
 	margin-bottom: 5px;
@@ -282,10 +284,8 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 .simple-list .photo-li {
 	float: left;
 	width: 160px;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	margin-bottom: 10px;
-	padding-right: 10px;
+	margin: 5px;
+	background: #F2F2F2;
 }
 
 .form-item{
@@ -311,9 +311,11 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 }
 
 .mgr-content form{
+	/*
 	padding: 10px;
 	margin: 20px;
 	border: 1px solid #339933;
+	*/
 }
 
 /*
@@ -326,10 +328,14 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 }
 */
 
-.mgr-content label, .mgr-content input, .mgr-content select, .mgr-content textarea{
+.mgr-content label, .mgr-content input, .mgr-content select{
 	display: block;
 	width: 95%;
 	margin: 0px 0px 5px 0px;
+}
+
+.mgr-content textarea{
+	width: 93%;
 }
 
 .mgr-content button{
@@ -361,9 +367,11 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 }
 
 .photo-li img {
+	/*
 	-webkit-box-shadow: 3px 3px 6px #666; 
 	-moz-box-shadow: 3px 3px 6px #666; 
-	/* box-shadow: 3px 3px 6px #666; */
+	box-shadow: 3px 3px 6px #666;
+	*/
 }
 
 .blog-item, .resource-item {
@@ -409,9 +417,6 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 }
 */
 
-.simple-list #photo-ul {
-	border-top: 1px dashed #339933;
-}
 
 .simple-list #photo-ul:after {
 	clear: both;
@@ -450,9 +455,11 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 	border-radius: 8px;
+	/*
 	-webkit-box-shadow: 3px 3px 6px #666; 
 	-moz-box-shadow: 3px 3px 6px #666; 
 	box-shadow: 3px 3px 6px #666;
+	*/
 }
 
 /*
@@ -550,12 +557,13 @@ background: #EDF4F1;
 	margin-left: 0px;
 	margin-right: 0px;
 	width: 218px;
+	border: 1px solid #669999;
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 	border-radius: 8px;
 	-webkit-box-shadow: 3px 3px 6px #666; 
 	-moz-box-shadow: 3px 3px 6px #666; 
-	box-shadow: 3px 3px 6px #666;
+	/* box-shadow: 3px 3px 6px #666; */
 }
 
 .widget-side h4 {

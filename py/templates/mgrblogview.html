@@ -17,7 +17,7 @@
 					<label>内容:</label>
 				</div>
 				<div class="form-item">
-					<textarea name="content" rows="30" cols="80" ></textarea>
+					<textarea id="wiki" name="content" rows="20" cols="40" ></textarea>
 				</div>
 				<div class="form-item" id="privilege">
 					<label>权限：</label>
@@ -47,7 +47,13 @@
 
 <%def name='loadjs()'>
 % if mgrprivilege:
+<link rel="stylesheet" type="text/css" href="/static/third/markitup/skins/markitup/style.css" />
+<link rel="stylesheet" type="text/css" href="/static/third/markitup/sets/wiki/style.css" /> 
+<script type="text/javascript" src="/static/third/markitup/jquery.markitup.js"></script>
+<script type="text/javascript" src="/static/third/markitup/sets/wiki/set.js"></script>
+<!--
 <script type="text/javascript" src="/static/third/tiny_mce/tiny_mce.js"></script>
+-->
 <script type="text/javascript">
 	% if blogid:
 	setneworedit.blogid = ${blogid};

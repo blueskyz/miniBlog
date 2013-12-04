@@ -350,8 +350,10 @@ function setbtforedit(url)
 			alert("标题不能为空!");
 			return;
 			}
-			var rawcontent = tinyMCE.activeEditor.getContent({format : 'raw'});
-			var summary = $(rawcontent).filter('p').eq(0).html();
+			//var rawcontent = tinyMCE.activeEditor.getContent({format : 'raw'});
+			var rawcontent = $("#wiki").val();
+			var summary = rawcontent.substr(0, rawcontent.indexOf('\n', 10));
+			if (!summary) summary = rawcontent.substr(0, 64);
 			if(summary.length==0){
 			alert("内容不能为空!");
 			return;
@@ -397,7 +399,8 @@ function setneworedit()
 				data = data[0]
 				$(".blogform label[name='id']").text(blogid);
 				$(".blogform input[name='title']").val(data["title"]);
-				tinyMCE.activeEditor.setContent(data["content"]);
+				$(".blogform textarea[name='content']").val(data["content"]);
+				// tinyMCE.activeEditor.setContent(data["content"]);
 				$(".blogform #privilege option[value='" + data["privilege"] + "']").attr("selected", "selected");
 				$(".blogform #blogcategory option[value='" + data["category_id"] + "']").attr("selected", "selected");
 				});
@@ -414,9 +417,11 @@ function setneworedit()
 
 function initmgrblog()
 {
-	tinyMCEInit();
+	// tinyMCEInit();
+	$('#wiki').markItUp(mySettings);
 	getblogcategoryforsel();
 	var url = "/rest/blog/";
+	setneworedit();
 	setbtforedit(url);
 }
 

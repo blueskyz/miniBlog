@@ -19,6 +19,7 @@ import app.photo as appphoto
 import app.blog as appblog
 import app.resource as appres
 import app.user as appuser
+import app.wiki as appwiki
 
 import myutil
 from myutil import render, mylog
@@ -31,6 +32,7 @@ urls = (# rest
 		"/rest/blog", appblog.app_blog,
 		"/rest/resource", appres.app_resource,
 		"/rest/user", appuser.app_user,
+		"/rest/wiki", appwiki.app_wiki,
 
 		# page
 		"/login/?", "login",
@@ -127,7 +129,7 @@ class photo:
 class blog:
 	def GET(self, categoryid = None, blogid = None):
 		categorys = json.loads(appblog.category().GET())
-		blogs = json.loads(appblog.blog().GET(blogid))
+		blogs = json.loads(appblog.blog().GET(blogid, True))
 		#mylog.loginfo(appblog.blog())
 		return render.blogview(menuname='/blog',
 				login = islogin(), 
