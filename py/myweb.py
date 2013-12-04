@@ -109,6 +109,7 @@ class myweb:
 # login page
 class login:
 	def GET(self):
+		if islogin() : raise web.seeother('/')
 		return render.loginview(menuname = '/login',
 				login=islogin(), 
 				mgrprivilege=mgrprivilege())
