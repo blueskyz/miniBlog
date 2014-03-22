@@ -5,6 +5,7 @@
 
 body {
 	font-family: "Lucida Grande","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
+	font-size: 14px;
 }
 
 ul, ol, dl, td, th, caption, pre, p, blockquote, input, textarea, table {
@@ -37,7 +38,7 @@ h1 {
     padding-left: 0;
     padding-right: 0;
     padding-top: 0;
-    font-size: 25px;
+    font-size: 20px;
     font-weight: bold;
     line-height: 110%;
     margin-bottom: 2px;
@@ -242,7 +243,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 	-moz-box-shadow: 3px 3px 6px #666; 
 	box-shadow: 3px 3px 6px #666;
 	*/
-	min-height: 400px;
+	/*min-height: 400px;*/
 	height: auto !important;
 	height: 100px;
 }
@@ -380,12 +381,13 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 }
 
 .blog-head, .resource-head {
-	font-size: 14px;
+	font-size: 18px;
 	font-weight: bold;
 }
 
-.blog-attrs {
-	margin-bottom: 16px;
+.blog-attrs, .resource-attrs{
+	font-style: italic;
+	margin-bottom: 8px;
 }
 
 .blog-item .blog-head, 
@@ -396,6 +398,12 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 .blog-content {
 	margin: 2px;
 	padding: 2px;
+}
+.blog-content>p, 
+.blog-content>h1,
+.blog-content>h2,
+.blog-content>h3{
+	margin-top: 2px;
 }
 
 .blog-attr, .resource-attr {
@@ -536,7 +544,7 @@ background: #EDF4F1;
 #my-main {
 	float: left;
 	width: 730px;
-	border-right: 1px dashed #339933;
+	/* border-right: 1px dashed #339933; */
 }
 
 #my-side {
@@ -569,11 +577,12 @@ background: #EDF4F1;
 }
 
 .widget-side h4 {
+	font-style: italic;
 	margin-top: 0px;
 	margin-left: 0px;
 	margin-bottom: 10px;
 	background-color: #669999;
-	color: #ffffff;
+	color: #ffcc00;
 	padding: 5px;
 	-moz-border-radius: 8px 8px 8px 8px;
 	-webkit-border-radius: 8px 8px 8px 8px;
