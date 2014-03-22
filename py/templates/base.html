@@ -7,6 +7,10 @@
 		<link type="image/x-icon" rel="Shortcut Icon" href="/static/image/favicon.png"/>
 		<link type="text/css" href="/static/css/hot-sneaks/jquery-ui.css" rel="Stylesheet" />	
 		<link type="text/css" href="/static/css/magnific-popup.css" rel="Stylesheet" />
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 		<link type="text/css" href="/static/css/my.css" rel="Stylesheet" />
 		${self.loadcss()}
 	</head>
@@ -20,9 +24,10 @@ menus.append(('/resource', '<a href="/resource">资源</a>'))
 if mgrprivilege:
 	menus.append(('/manage', '<a href="/manage/blog">管理</a>'))
 if login:
-	menus.append(('/logout', '<a id="logout" onclick="logoutclick();" href="/login">退出</a>'))
+	menus.append(('/logout', '<a id="logout" onclick="logoutclick();" href="">退出</a>'))
 else:
-	menus.append(('/login', '<a href="/login">登录</a>'))
+	#menus.append(('/login', '<a href="/login">登录</a>'))
+	menus.append(('/login', '<a href="/login" data-toggle="modal" data-title="登录" data-target="#loginModal">登录</a>'))
 %>
 <%doc>
 menus.append('<a href="/about">关于</a>')
@@ -43,6 +48,12 @@ menus.append('<a href="/about">关于</a>')
 				</ul>
 			</div>
 		</div>
+		<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
 		<div id="my-siteContain">
 			<div id="my-content">
 				<div id="my-main">
@@ -76,9 +87,14 @@ menus.append('<a href="/about">关于</a>')
 	<script type="text/javascript" src="/static/js/jquery.js"></script>
 	<script type="text/javascript" src="/static/js/jquery.pin.js"></script>
 	<script type="text/javascript" src="/static/js/jquery.magnific-popup.min.js"></script>
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/static/js/myjs.js"></script>
 	${self.loadjs()}
 	<script type="text/javascript">
+		$("#loginModal").on("hidden.bs.modal", function() {
+				$(this).removeData("bs.modal");
+				});
 		$(function(){
 				var scollTop = function(info){
 				$(".pinned").pin({containerSelector: "#my-content",

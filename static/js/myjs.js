@@ -79,7 +79,7 @@ function logoutclick()
 			type: 'post',
 			contentType: 'application/json',
 			dataType: 'json',
-			success: function(data){ window.location.href="/login"; }
+			success: function(data){ window.location.reload(); }
 			});
 }
 
@@ -452,7 +452,8 @@ function initLoginView(){
 	refreshPic(img, imgsrc);
 	msgShow("输入认证信息登录。");
 
-	$("#login-info form input[name='user']").focus();
+	//$("#login-info form input[name='user']").focus();
+	$("#guest-login form input[name='user']").focus();
 	// click change picture
 	img.click(function(){
 			refreshPic($(this), imgsrc);
@@ -497,7 +498,7 @@ function initLoginView(){
 				contentType: "application/json",
 				dataType: 'json',
 				data: JSON.stringify(params),
-				success: function(){window.location.href="/";},
+				success: function(){window.location.reload();},
 				error: error
 				});
 	}
@@ -525,7 +526,7 @@ function initLoginView(){
 				contentType: "application/json",
 				dataType: 'json',
 				data: JSON.stringify(params),
-				success: function(){window.location.href="/";},
+				success: function(){window.location.reload();},
 				error: error
 				});
 	}
@@ -556,7 +557,7 @@ function initLoginView(){
 			alert("登录类型错误！");
 		}
 	});
-	$(".submit").bind('click', login);
+	$("#authlogin").bind('click', login);
 	$("#login-info form input").keydown(function(event){
 			if (event.keyCode == 13){
 			login();

@@ -38,7 +38,7 @@ h1 {
     padding-left: 0;
     padding-right: 0;
     padding-top: 0;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     line-height: 110%;
     margin-bottom: 2px;
@@ -53,6 +53,14 @@ h1 span {
     font-size: 12px;
     font-weight: normal;
     margin-left: 10px;
+}
+
+h2 {
+	font-size: 18px;
+}
+
+h3 {
+	font-size: 16px;
 }
 
 img {
@@ -150,7 +158,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 	top: 8px;
 	margin-top: 0px;
 	margin-bottom: 0px;
-	font-size: 20px;
+	font-size: 18px;
 }
 
 #my-navigation-home{
@@ -560,12 +568,12 @@ background: #EDF4F1;
 
 .widget-side {
 	float: left;
-	background: #ffffff;
+	/* background: #E7F2FA; */
+	background: #e9ffe9;
 	margin-top: 16px;
 	margin-left: 0px;
 	margin-right: 0px;
 	width: 218px;
-	border: 1px solid #669999;
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 	border-radius: 8px;
@@ -622,18 +630,8 @@ background: #EDF4F1;
 }
 
 #login-info{
-	float: left;
-	width: 98%;
 	margin-left: 8px;
 	margin-right: 10px;
-	border: 1px solid #339933;
-}
-
-#login-info>#login-option{
-	float: left;
-	margin: auto;
-	width: 120px;
-	padding: 30px;
 }
 
 #login-info>#login-option label, #login-info>#login-option input{
@@ -641,39 +639,19 @@ background: #EDF4F1;
 	margin: 8px;
 }
 
-#login-form, #guest-login{
-	/* background: #f0efec; */
-	float: right;
-	margin: auto;
-	padding: 20px;
-	padding-right: 60px;
-	padding-left: 60px;
-	border-left: 1px dashed #339933;
-	width: 400px;
-}
-
 #login-form {
 	display: none;
 }
 
-#login-info label, .login-item{
-	display: block;
-	width: 100%;
+.login-item {
+	width: 300px;
 }
 
-#login-info input{
-	display: block;
-	width: 95%;
-}
-
-#login-info input[type='button']{
-	display: block;
-	width: 95%;
+.login-item>input {
 }
 
 #login-info .authphoto{
 	cursor: pointer;
-	width: 100%;
 }
 
 #login-form img{
@@ -713,6 +691,15 @@ background: #EDF4F1;
 	margin-right: 10px;
 }
 
+.modal-dialog {
+	width: 360px; /* SET THE WIDTH OF THE MODAL */
+}
+
+.modal-header {
+	color: #0000FF;
+	font-weight: bold;
+}
+
 #my-footer {
 	clear: both;
 	background-color: #006666;
@@ -720,19 +707,19 @@ background: #EDF4F1;
 	float: left;
 	background-repeat: no-repeat;
 	background-position: left top;
-	*/
-	width: 100%;
-	opacity: 1.0;
+	 */
+width: 100%;
+opacity: 1.0;
 
-	margin-top: 8px;
-	/*
-	-moz-border-radius: 8px;
-	-webkit-border-radius: 8px;
-	border-radius: 8px;
-	*/
-	-webkit-box-shadow: 3px 3px 6px #666; 
-	-moz-box-shadow: 3px 3px 6px #666; 
-	box-shadow: 3px 3px 6px #666;
+margin-top: 8px;
+/*
+-moz-border-radius: 8px;
+-webkit-border-radius: 8px;
+border-radius: 8px;
+ */
+-webkit-box-shadow: 3px 3px 6px #666; 
+-moz-box-shadow: 3px 3px 6px #666; 
+box-shadow: 3px 3px 6px #666;
 }
 
 #my-footer p {
