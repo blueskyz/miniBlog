@@ -36,10 +36,10 @@
 					<option value="2">管理员读写</option>
 				</select>
 			</div>
-			<input type="submit" name="submit" value="提交" id="submit"></input>
-			<input type="button" name="new" value="新建" id="new"
+			<input class="btn btn-primary" type="submit" name="submit" value="提交" id="submit"></input>
+			<input class="btn btn-primary" type="button" name="new" value="新建" id="new"
 			onclick="window.location.href='/manage/photo'"></input>
-			<input type="button" name="delete" value="删除" id="delete"></input>
+			<input class="btn btn-primary" type="button" name="delete" value="删除" id="delete"></input>
 		</form>
 		% else:
 		${self.errPrivilege()}

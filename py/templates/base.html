@@ -5,19 +5,19 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<title>逆水行舟</title>
 		<link type="image/x-icon" rel="Shortcut Icon" href="/static/image/favicon.png"/>
+		<!--
 		<link type="text/css" href="/static/css/hot-sneaks/jquery-ui.css" rel="Stylesheet" />	
-		<link type="text/css" href="/static/css/magnific-popup.css" rel="Stylesheet" />
-		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+		-->
+		<link type="text/css" href="http://cdn.bootcss.com/magnific-popup.js/0.9.9/magnific-popup.css" rel="Stylesheet" />
+		<link type="text/css" href="http://cdn.bootcss.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+		<link type="text/css" href="http://cdn.bootcss.com/bootstrap/3.1.1/css/bootstrap-theme.min.css" rel="stylesheet">
 		<!-- Optional theme -->
-		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 		<link type="text/css" href="/static/css/my.css" rel="Stylesheet" />
 		${self.loadcss()}
 	</head>
 
 <%
 menus = []
-menus.append(('/', '<a href="/">首页</a>'))
 menus.append(('/blog', '<a href="/blog/0">日志</a>'))
 menus.append(('/photo', '<a href="/photo/0">相册</a>'))
 menus.append(('/resource', '<a href="/resource">资源</a>'))
@@ -70,6 +70,12 @@ menus.append('<a href="/about">关于</a>')
 								<li><a href="http://www.rui-yang.com/">Everybody loves Rui</a></li>
 							</ul>
 						</div>
+						<div class="widget-side">
+							<h4>个人资料</h4>
+							<ul class="newlink">
+								<li><a href="mailto:zhangshizhuo@gmail.com">Email Me</a></li>
+							</ul>
+						</div>
 						<a id="scrollDown" href="#my-footer" title=""></a>
 						<a id="scrollUp" href="#top" title=""></a>
 					</div>
@@ -83,12 +89,15 @@ menus.append('<a href="/about">关于</a>')
 	<!--
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
 	<script type="text/javascript" src="/static/js/pirobox.js"></script>
-	-->
 	<script type="text/javascript" src="/static/js/jquery.js"></script>
-	<script type="text/javascript" src="/static/js/jquery.pin.js"></script>
-	<script type="text/javascript" src="/static/js/jquery.magnific-popup.min.js"></script>
-	<!-- Latest compiled and minified JavaScript -->
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	-->
+	<script type="text/javascript" src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+	<!--
+	<script type="text/javascript" src="http://libs.baidu.com/jqueryui/1.8.22/jquery-ui.min.js "></script>
+	-->
+	<script type="text/javascript" src="http://cdn.bootcss.com/jquery.pin/1.0.1/jquery.pin.min.js"></script>
+	<script type="text/javascript" src="http://cdn.bootcss.com/magnific-popup.js/0.9.9/jquery.magnific-popup.min.js"></script>
+	<script type="text/javascript" src="http://cdn.bootcss.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/static/js/myjs.js"></script>
 	${self.loadjs()}
 	<script type="text/javascript">

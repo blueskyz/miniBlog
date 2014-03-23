@@ -10,59 +10,57 @@
 					<input id="login-type-guest" type="radio"
 					name="login-option" value="guest" checked="checked">
 					</input>
-					朋友登录
+					朋友
 				</label>
-			</div>
-			<div>
-				<label><input id="login-type-user" type="radio"
+				<label>
+					<input id="login-type-user" type="radio"
 					name="login-option" value="user" >
 					</input>
-					用户登录
+					用户
 				</label>
+			</div>
+		</div>
+		<form id="guest-login" action="" method="post">
+			<div class="login-item">
+				<input class="input-text" type="text" name="user" 
+				placeholder="网站主人中文名" value="" autofocus>
+				</input>
+			</div>
+			<div class="login-item">
+				<input class="input-text" type="text" name="authcode" placeholder="验证码" value=""></input>
+			</div>
+			<div class="login-item">
+				<label>验证图片(点击图片更换)：</label>
+				<img class="authphoto" title="点击更换图片"></img>
+			</div>
+			<div class="login-item">
+				<div class="login-help">
+					<span></span>
 				</div>
 			</div>
-			<form id="guest-login" action="" method="post">
-				<div class="login-item">
-					<input class="input-text" type="text" name="user" 
-					placeholder="网站主人中文名" value="" autofocus>
-					</input>
+		</form>
+		<form id="login-form" action="" method="post">
+			<div class="login-item">
+				<input class="input-text" type="text" name="user" 
+				placeholder="用户名" value="" autofocus>
+				</input>
+			</div>
+			<div class="login-item">
+				<input class="input-text" type="password" name="passwd" placeholder="密码" value=""></input>
+			</div>
+			<div class="login-item">
+				<input class="input-text" type="text" name="authcode" placeholder="验证码" value=""></input>
+			</div>
+			<div class="login-item">
+				<label>验证图片(点击图片更换)：</label>
+				<img class="authphoto" title="点击更换图片"></img>
+			</div>
+			<div class="login-item">
+				<div class="login-help">
+					<span></span>
 				</div>
-				<div class="login-item">
-					<input class="input-text" type="text" name="authcode" placeholder="验证码" value=""></input>
-				</div>
-				<div class="login-item">
-					<label>验证图片(点击图片更换)：</label>
-					<img class="authphoto" title="点击更换图片"></img>
-				</div>
-				<div class="login-item">
-					<div class="login-help">
-						<span></span>
-					</div>
-				</div>
-			</form>
-			<form id="login-form" action="" method="post">
-				<div class="login-item">
-					<input class="input-text" type="text" name="user" 
-					placeholder="用户名" value="" autofocus>
-					</input>
-				</div>
-				<div class="login-item">
-					<input class="input-text" type="password" name="passwd" placeholder="密码" value=""></input>
-				</div>
-				<div class="login-item">
-					<input class="input-text" type="text" name="authcode" placeholder="验证码" value=""></input>
-				</div>
-				<div class="login-item">
-					<label>验证图片(点击图片更换)：</label>
-					<img class="authphoto" title="点击更换图片"></img>
-				</div>
-				<div class="login-item">
-					<div class="login-help">
-						<span></span>
-					</div>
-				</div>
-			</form>
-		</div>
+			</div>
+		</form>
 	</div>
 </div>
 <div class="modal-footer">

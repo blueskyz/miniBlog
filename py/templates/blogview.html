@@ -7,6 +7,11 @@
 <script type="text/javascript" src="/static/third/syntaxhighlighter/scripts/shCore.js"></script>
 <script type="text/javascript" src="/static/third/syntaxhighlighter/scripts/shBrushCpp.js"></script>
 <script type="text/javascript">SyntaxHighlighter.all();</script>
+<script type="text/javascript">
+$(".pageindex").bind("click", function(event){
+		window.location.href = $(this).attr('tourl');
+});
+</script>
 </%def>
 
 <%
@@ -76,9 +81,7 @@ for item in categorys:
 		% if pageidx == i:
 		<li class="selectpage" index="${i}">${i}</li>
 		% else:
-		<li class="pageindex" index="${i}">
-		<a href="/blog/${categoryid}/${i}/${pagesize}">${i}</a>
-		</li>
+		<li class="pageindex" index="${i}" tourl="/blog/${categoryid}/${i}/${pagesize}">${i}</li>
 		% endif
 		% endfor
 	</ul>

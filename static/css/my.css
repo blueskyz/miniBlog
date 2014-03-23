@@ -264,7 +264,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 	clear: both;
 }
 
-.simple-list h1 {
+.simple-list>h1 {
 	/* background-color: #669999; */
 	font-style: italic;
 	color: #FFCC00;
@@ -586,6 +586,7 @@ background: #EDF4F1;
 
 .widget-side h4 {
 	font-style: italic;
+	font-size: 16px;
 	margin-top: 0px;
 	margin-left: 0px;
 	margin-bottom: 10px;
@@ -644,7 +645,7 @@ background: #EDF4F1;
 }
 
 .login-item {
-	width: 300px;
+	width: 220px;
 }
 
 .login-item>input {
@@ -661,9 +662,8 @@ background: #EDF4F1;
 .login-help{
 	/* background: #f0efec; */
 	margin-left: 0px;
-	margin-top: 30px;
-	margin-bottom: 30px;
-	padding: 20px;
+	margin-top: 10px;
+	padding: 10px;
 	padding-left: 0px;
 	width: 100%;
 
@@ -692,7 +692,7 @@ background: #EDF4F1;
 }
 
 .modal-dialog {
-	width: 360px; /* SET THE WIDTH OF THE MODAL */
+	width: 300px; /* SET THE WIDTH OF THE MODAL */
 }
 
 .modal-header {

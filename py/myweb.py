@@ -95,7 +95,7 @@ def mgrprivilege():
 
 
 # main page
-class myweb:
+class myweb_old:
 	def GET(self, cururl):
 		categorys = json.loads(appblog.category().GET())
 		blogs = json.loads(appblog.bloglist().GET(0, 1, 40))
@@ -105,6 +105,11 @@ class myweb:
 				photocount = 8, 
 				categorys = categorys,
 				blogs = blogs)
+
+# index page
+class myweb:
+	def GET(self, cururl):
+		return bloglist().GET(0, pageidx=1, pagesize=40)
 
 # login page
 class login:
@@ -142,7 +147,7 @@ class blog:
 
 # blog list
 class bloglist:
-	def GET(self, categoryid=0, pageidx='1', pagesize='8'):
+	def GET(self, categoryid=0, pageidx=1, pagesize=8):
 		if categoryid is None:
 			categoryid = 0
 		if pageidx is None: pageidx = 1
@@ -172,7 +177,7 @@ class bloglist:
 
 # resource page
 class resource:
-	def GET(self, categoryid=0, pageidx='1', pagesize='8'):
+	def GET(self, categoryid=0, pageidx=1, pagesize=8):
 		if categoryid is None:
 			categoryid = 0
 		if pageidx is None: pageidx = 1
