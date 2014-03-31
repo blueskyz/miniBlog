@@ -9,6 +9,7 @@ import mediawiki as wiki
 
 import config
 import myutil
+from htmlCode2Html import Code2Html
 
 db = myutil.db
 privilege = myutil.privilege
@@ -177,6 +178,7 @@ class blog:
 			if isrenderwiki and item["published"] > neweditstyle:
 				blogitem["summary"] = wiki.wiki2html(item["summary"], False)
 				blogitem["content"] = wiki.wiki2html(item["content"], False)
+				blogitem["content"] = Code2Html().convert(blogitem["content"])
 			else:
 				blogitem["summary"] = item["summary"]
 				blogitem["content"] = item["content"]

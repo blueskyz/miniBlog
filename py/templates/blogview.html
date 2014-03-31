@@ -1,12 +1,16 @@
 <%inherit file='base.html' />
 
 <%def name="loadcss()">
+<!--
 <link type="text/css" rel="stylesheet" href="/static/third/syntaxhighlighter/styles/shCoreDefault.css"/>
+-->
 </%def>
 <%def name='loadjs()'>
+<!--
 <script type="text/javascript" src="/static/third/syntaxhighlighter/scripts/shCore.js"></script>
 <script type="text/javascript" src="/static/third/syntaxhighlighter/scripts/shBrushCpp.js"></script>
 <script type="text/javascript">SyntaxHighlighter.all();</script>
+-->
 <script type="text/javascript">
 $(".pageindex").bind("click", function(event){
 		window.location.href = $(this).attr('tourl');
