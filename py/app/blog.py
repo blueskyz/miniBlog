@@ -177,8 +177,10 @@ class blog:
 			blogitem["title"] = item["title"]
 			if isrenderwiki and item["published"] > neweditstyle:
 				blogitem["summary"] = wiki.wiki2html(item["summary"], False)
-				blogitem["content"] = wiki.wiki2html(item["content"], False)
-				blogitem["content"] = Code2Html().convert(blogitem["content"])
+				first = Code2Html()
+				result = first.convertBeforeWiki(item["content"])
+				result = wiki.wiki2html(result, False)
+				blogitem["content"] = first.convertAfterWiki(result)
 			else:
 				blogitem["summary"] = item["summary"]
 				blogitem["content"] = item["content"]

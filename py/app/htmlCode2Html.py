@@ -8,11 +8,18 @@ from pygments.formatters import HtmlFormatter
 from pygments.lexers import PythonLexer
 
 class Code2Html(object):
-	def convert(self, content):
-		result = re.subn(r'{{{.*?}}}', self.replace, content, flags=re.DOTALL)
+	def __init__(self):
+		self._holders = []
+
+	def convertBeforeWiki(self, content):
+		result = re.subn(r'{{{.*?}}}', self._createHolder, content, flags=re.DOTALL)
 		return result[0]
 
-	def replace(self, content):
+	def convertAfterWiki(self, content):
+		result = re.subn(r'{{{\d+}}}', self._replaceHolder, content, flags=re.DOTALL)
+		return result[0]
+
+	def _createHolder(self, content):
 		result = re.search(r'^{{{!([^\n]*)(.*?)}}}', 
 				content.group(), 
 				flags=re.DOTALL)
@@ -20,12 +27,22 @@ class Code2Html(object):
 			lang = result.group(1)
 			code = result.group(2)
 			if lang and code:
-				pyLexer = get_lexer_by_name(result.group(1), stripall=True)
+				lexer = get_lexer_by_name(result.group(1), stripall=True)
 				code = highlight(code, 
-						PythonLexer(), 
+						lexer, 
 						HtmlFormatter()).encode('utf-8')
-				return code
+				self._holders.append(code)
+				return '{{{%d}}}' % len(self._holders)
 		return None	
+
+	def _replaceHolder(self, content):
+		print self._holders
+		if self._holders:
+			result = re.search(r'{{{(\d+)}}}', content.group(), flags=re.DOTALL)
+			if result:
+				idx = int(result.group(1))
+				return self._holders[idx - 1]
+		return None
 
 
 def main():
@@ -61,8 +78,13 @@ def main():
 
 	结束
 	'''
-	print Code2Html().convert(html0)
-	print Code2Html().convert(html1)
+	first = Code2Html()
+	result = first.convertBeforeWiki(html0)
+	print first.convertAfterWiki(result)
+
+	second = Code2Html()
+	result = second.convertBeforeWiki(html1)
+	print second.convertAfterWiki(result)
 
 if __name__ == '__main__':
 	main()

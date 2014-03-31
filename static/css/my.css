@@ -8,7 +8,7 @@ body {
 	font-size: 14px;
 }
 
-ul, ol, dl, td, th, caption, pre, p, blockquote, input, textarea, table {
+ul, ol, dl, td, th, caption, p, blockquote, input, textarea, table {
     color: #333333;
 	/*
     font-family: Arial;
@@ -730,12 +730,7 @@ box-shadow: 3px 3px 6px #666;
 	margin: 8px;
 }
 
-/*
- * code
- */
 pre {
-	color: #FFF8DC;
-	background-color: #233B5A;
-	padding: 8px;
+	background: none repeat scroll 0% 0% #272822;
+	color: #F8F8F2;
 }
-
