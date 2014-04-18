@@ -1,2 +1,2 @@
 #!/bin/sh
-kill `pgrep -f "python /opt/data/station/py/myweb.py"`
+kill `pgrep -f "python /data/station/py/myweb.py"`
