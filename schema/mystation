@@ -1,0 +1,58 @@
+upstream internal_mystation {
+	server 127.0.0.1:7000;
+	server 127.0.0.1:7001;
+	server 127.0.0.1:7002;
+	server 127.0.0.1:7003;
+	server 127.0.0.1:7004;
+	server 127.0.0.1:7005;
+	server 127.0.0.1:7006;
+	server 127.0.0.1:7007;
+}
+
+server {
+	listen       80;
+	server_name  www.hopez.org;
+
+	proxy_read_timeout 5s;
+	proxy_send_timeout 5s;
+	send_timeout 5s;
+	resolver_timeout 5s;
+	client_body_timeout 5s;
+
+	client_max_body_size 150k;
+	client_body_buffer_size 150k;
+
+	location / {
+		root /data/station;
+
+		uwsgi_pass    internal_mystation;
+
+		uwsgi_param   Host                 $host;
+		uwsgi_param   X-Real-IP            $remote_addr;
+		uwsgi_param   X-Forwarded-For      $proxy_add_x_forwarded_for;
+		uwsgi_param   X-Forwarded-Proto    $http_x_forwarded_proto;
+
+		include uwsgi_params;
+	}
+
+	location /mydb {
+		expires	180d;
+#internal;
+		alias /data/station/filedb;
+	}
+
+	location /resdata {
+		expires	30d;
+		internal;
+		alias /data/station/filedb;
+	}
+
+	location /static {
+            root /data/station;
+			expires 180d;
+	}
+
+	location /static-data {
+            root /data/station/static-data;
+	}
+}
