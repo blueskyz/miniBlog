@@ -414,6 +414,12 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 	margin-top: 2px;
 }
 
+.blog-content>h1,
+.blog-content>h2,
+.blog-content>h3{
+	font-weight: bold;
+}
+
 .blog-attr, .resource-attr {
 	color: #5a9594;
 }
