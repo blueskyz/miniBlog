@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+if [ -f /bin/bashno ]; then
+#if [ -f /bin/bash ]; then
+/bin/bash
+else
+cron
+/usr/sbin/munin-node --config /etc/munin/munin-node.conf
+supervisord
+/usr/sbin/sshd -D
+fi

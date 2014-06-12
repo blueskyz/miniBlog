@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if [ -f /bin/bashno ]; then
+/bin/bash
+else
+supervisord
+/usr/sbin/sshd -D
+fi
