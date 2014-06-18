@@ -53,7 +53,7 @@ class bloglist:
 					"category_link.category_id as category_id " \
 					"from blog left outer join " \
 					"category_link on category_link.blog_id = blog.blog_id " \
-					"where blog.privilege <= %d order by updated desc " \
+					"where blog.privilege <= %d order by published desc " \
 					"limit %d, %d;" % (privilege(), start, offset)
 			curlist = db.query(query).list()
 			bloglist = []
@@ -62,7 +62,10 @@ class bloglist:
 				blogitem["blogid"] = item["blog_id"]
 				blogitem["title"] = item["title"]
 				if item["published"] > neweditstyle:
-					blogitem["summary"] = wiki.wiki2html(item["summary"], False)
+					first = Code2Html()
+					result = first.convertBeforeWiki(item["summary"])
+					result = wiki.wiki2html(result, False)
+					blogitem["summary"] = first.convertAfterWiki(result)
 				else:
 					blogitem["summary"] = item["summary"]
 				blogitem["published"] = time.strftime("%Y-%m-%d %H:%M:%S" , 
@@ -87,7 +90,7 @@ class bloglist:
 			what="blog.blog_id as blog_id, blog.title as title, " \
 					"blog.summary as summary, blog.published as published, " \
 					"blog.updated as updated"
-			order = "updated desc"
+			order = "published desc"
 			curlist = db.select("blog, category_link", 
 					what=what, where=curwhere, order=order, 
 					limit="%d, %d" % (start,offset)).list()
@@ -98,7 +101,10 @@ class bloglist:
 				blogitem["blogid"] = item["blog_id"]
 				blogitem["title"] = item["title"]
 				if item["published"] > neweditstyle:
-					blogitem["summary"] = wiki.wiki2html(item["summary"], False)
+					first = Code2Html()
+					result = first.convertBeforeWiki(item["summary"])
+					result = wiki.wiki2html(result, False)
+					blogitem["summary"] = first.convertAfterWiki(result)
 				else:
 					blogitem["summary"] = item["summary"]
 				blogitem["published"] = time.strftime("%Y-%m-%d %H:%M:%S" , 
@@ -176,13 +182,13 @@ class blog:
 			blogitem["blogid"] = item["blog_id"]
 			blogitem["title"] = item["title"]
 			if isrenderwiki and item["published"] > neweditstyle:
-				blogitem["summary"] = wiki.wiki2html(item["summary"], False)
+				#blogitem["summary"] = wiki.wiki2html(item["summary"], False)
 				first = Code2Html()
 				result = first.convertBeforeWiki(item["content"])
 				result = wiki.wiki2html(result, False)
 				blogitem["content"] = first.convertAfterWiki(result)
 			else:
-				blogitem["summary"] = item["summary"]
+				#blogitem["summary"] = item["summary"]
 				blogitem["content"] = item["content"]
 
 			blogitem["published"] = time.strftime("%Y-%m-%d %H:%M:%S" , 

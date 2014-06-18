@@ -344,6 +344,16 @@ function setbtforedit(url)
 		alert("提交成功");
 	}
 
+	function getSummary(data) {
+		var re = /(^==[\s\S]*?)^={2,}/gm;
+		match = re.exec(data);
+		var summary = data;
+		if (match){
+			summary = match[1];
+		}
+		return summary;
+	}
+
 	$("#submit").bind("click", function(event){
 			var title = $(".blogform input[name='title']").val();
 			if(title.length==0){
@@ -352,7 +362,7 @@ function setbtforedit(url)
 			}
 			//var rawcontent = tinyMCE.activeEditor.getContent({format : 'raw'});
 			var rawcontent = $("#wiki").val();
-			var summary = rawcontent.substr(0, rawcontent.indexOf('\n', 10));
+			var summary = getSummary(rawcontent);
 			if (!summary) summary = rawcontent.substr(0, 64);
 			if(summary.length==0){
 			alert("内容不能为空!");
