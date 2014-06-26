@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /blog
+Allow: /resource
+Disallow: /photo
+Disallow: /login
