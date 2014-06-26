@@ -24,6 +24,32 @@ for item in categorys:
 	mapcategoryname[item['category_id']] = item['name']
 %>
 
+<%def name="title()">
+% if blogid:
+<% return blogs[0]['title'] + ' - ' %>
+% else:
+% for item in categorys:
+% if item['category_id'] == int(categoryid):
+<% return item['name'] + ' - ' %>
+% endif
+% endfor
+<% return '' %>
+% endif
+</%def>
+
+<%def name="keywords()">
+% if blogid:
+<% return blogs[0]['title'] %>
+% else:
+% for item in categorys:
+% if item['category_id'] == int(categoryid):
+<% return item['name'] %>
+% endif
+% endfor
+<% return '' %>
+% endif
+</%def>
+
 <%def name="category()">
 <h4>分类</h4>
 <ul id="blogcategory">
@@ -50,9 +76,9 @@ for item in categorys:
 		<div class="blog-item">
 			% endif
 			<div class="blog-head">
-				<a href="/blog/${blog['category_id']}/${blog['blogid']}" target="_blank">
+				<h1><a href="/blog/${blog['category_id']}/${blog['blogid']}" target="_blank">
 					${blog['title']}
-				</a>
+				</a></h1>
 			</div>
 			<div class="blog-attrs">
 				<span class="blog-attr">${blog['published']}</span>
@@ -69,8 +95,10 @@ for item in categorys:
 			<div class="blog-content">
 			% if blogid:
 				${blog['content']}
+			<%doc>
 			% else:
 				${blog['summary']}
+			</%doc>
 			% endif
 			</div>
 		</div>

@@ -16,6 +16,24 @@ for item in categorys:
 	mapcategoryname[item['category_id']] = item['name']
 %>
 
+<%def name="title()">
+% if blogid:
+<% return blogs[0]['title'] + ' - ' %>
+% else:
+% for item in categorys:
+% if item['category_id'] == int(categoryid):
+<% return item['name'] + ' - ' %>
+% endif
+% endfor
+<% return '' %>
+% endif
+</%def>
+
+<%def name="keywords()">
+<% return '电子书，音乐，软件，文档' %>
+</%def>
+
+
 <%def name="category()">
 <h4>分类</h4>
 <ul id="resourcecategory">
