@@ -3,3 +3,5 @@ Allow: /blog
 Allow: /resource
 Disallow: /photo
 Disallow: /login
+Disallow: /static
+
