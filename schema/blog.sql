@@ -8,7 +8,7 @@ USE myblog;
 -- DROP TABLE IF EXISTS blog;
 CREATE TABLE IF NOT EXISTS blog (blog_id int(4) primary key NOT NULL, 
 	title char(255) NOT NULL, 
-	summary char(255), 
+	summary text, 
 	permalink varchar(512), 
 	link varchar(512), 
 	status int(4), 
