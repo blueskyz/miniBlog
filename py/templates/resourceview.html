@@ -3,11 +3,6 @@
 <%def name="loadcss()">
 </%def>
 <%def name='loadjs()'>
-<script type="text/javascript">
-$(".pageindex").bind("click", function(event){
-		window.location.href = $(this).attr('tourl');
-});
-</script>
 </%def>
 
 <%
@@ -86,7 +81,9 @@ for item in categorys:
 		% if pageidx == i:
 		<li class="selectpage" index="${i}">${i}</li>
 		% else:
-		<li class="pageindex" index="${i}" tourl="/resource/${categoryid}/${i}/${pagesize}">${i}</li>
+		<li class="pageindex" index="${i}">
+		<a href="/resource/${categoryid}/${i}/${pagesize}">${i}</a>
+		</li>
 		% endif
 		% endfor
 	</ul>

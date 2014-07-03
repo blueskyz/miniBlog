@@ -18,7 +18,7 @@ function splitpage(urltotal, urllist ,curindex, count, pagewin, usedata, showfun
 			$ (".splitpage").empty();
 			if(begin > pagewin){
 			var prevpage = begin - 1;
-			var curli = $ ("<li class='pageindex' " + 
+			var curli = $ ("<li class='photopageindex' " + 
 				"index='" + prevpage + "' rel='prev'>Prev</li>");
 			$ (".splitpage").append(curli);
 			}
@@ -33,18 +33,18 @@ function splitpage(urltotal, urllist ,curindex, count, pagewin, usedata, showfun
 						"index='" + curitem + "'>" + curitem + "</li>");
 			}
 			else {
-				curli = $ ("<li class='pageindex' index='" + 
+				curli = $ ("<li class='photopageindex' index='" + 
 						curitem + "'>" + curitem + "</li>");
 			}
 			$ (".splitpage").append(curli);
 			}
 			if((totalpage - begin) >= pagewin){
 				var nextpage = begin + pagewin;
-				var curli = $ ("<li class='pageindex' " + 
+				var curli = $ ("<li class='photopageindex' " + 
 						"index='" + nextpage + "' rel='next'>Next</li>");
 				$ (".splitpage").append(curli);
 			}
-			var curitem = $ (".pageindex");
+			var curitem = $ (".photopageindex");
 			curitem.bind("click", function(event){
 					var index = $ (this).attr("index");
 					splitpage(urltotal, urllist, index, 

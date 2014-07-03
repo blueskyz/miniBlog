@@ -526,9 +526,15 @@ background: #EDF4F1;
 
 .splitpage li.pageindex {
 	display: block;
-	padding: 4px 8px;
 	border: 1px solid #ccc;
 	cursor: pointer;
+}
+
+.splitpage li.photopageindex {
+	display: block;
+	border: 1px solid #ccc;
+	cursor: pointer;
+	padding: 4px 8px;
 }
 
 .splitpage li.selectpage{
