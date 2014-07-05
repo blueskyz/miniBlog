@@ -4,6 +4,7 @@
 import os
 import web
 import logging
+import ConfigParser
 
 # format char
 fmt_c = '********'
@@ -12,11 +13,13 @@ debug = False
 autoreload = False
 
 # database
-dbn = 'mysql'
-user = 'webadmin'
-password = 'webadmin791127'
-host = 'localhost'
-dbname = 'myblog'
+cfBase = ConfigParser.ConfigParser()
+cfBase.read('py/config/base.ini')
+dbn = cfBase.get('dbs', 'dbn')
+user = cfBase.get('dbs', 'user')
+password = cfBase.get('dbs', 'password')
+host = cfBase.get('dbs', 'host')
+dbname = cfBase.get('dbs', 'dbname')
 print fmt_c, 'database set', fmt_c
 print 'dbn=', dbn
 print 'user=', user
@@ -42,11 +45,31 @@ print 'log_format', log_format
 print ''
 
 # file db path
-filedb = "/opt/data/station/filedb/"
+filedb = "/data/station/filedb/"
 print fmt_c, 'other set', fmt_c
 print 'filedb', filedb
 
+# station name
+title = cfBase.get('station', 'title')
+station_desc = cfBase.get('station', 'station_desc')
 
 # guest reader
-guest_reader="张士卓"
+guest_reader = cfBase.get('login', 'guest_reader')
+
+
+# widget
+def loadWidgets(widgetCfg):
+	widgets = {}
+	cfWidget = ConfigParser.ConfigParser()
+	cfWidget.read(widgetCfg)
+	sections = cfWidget.sections()
+	for section in sections:
+		options = cfWidget.options(section)
+		item = {}
+		widgets[section] = item
+		for option in options:
+			item[option] = cfWidget.get(section, option)
+	return widgets
+
+widgets = loadWidgets('py/config/widgets.ini')
 

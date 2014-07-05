@@ -100,50 +100,58 @@ class myweb_old:
 		categorys = json.loads(appblog.category().GET())
 		blogs = json.loads(appblog.bloglist().GET(0, 1, 40))
 		return render.index(menuname = '/', 
-				login = islogin(), 
+				login=islogin(), 
 				mgrprivilege=mgrprivilege(), 
-				photocount = 8, 
-				categorys = categorys,
-				blogs = blogs)
+				photocount=8, 
+				categorys=categorys,
+				blogs=blogs)
 
 # index page
 class myweb:
 	def GET(self, cururl):
 		return bloglist().GET(0, pageidx=1, pagesize=40)
 
+
 # login page
 class login:
 	def GET(self):
 		if islogin() : raise web.seeother('/')
-		return render.loginview(menuname = '/login',
+		return render.loginview(
+				config=config,
+				menuname='/login',
 				login=islogin(), 
 				mgrprivilege=mgrprivilege())
+
 
 # photo page
 class photo:
 	def GET(self, categoryid = '0'):
 		if len(categoryid) == 0 : categoryid = '0'
 		categorys = json.loads(appphoto.category().GET())
-		return render.photoview(menuname='/photo',
-				login = islogin(), 
-				mgrprivilege = mgrprivilege(), 
-				categoryid = categoryid,
-				categorys = categorys, 
-				photocount = 40)
+		return render.photoview(
+				config=config,
+				menuname='/photo',
+				login=islogin(), 
+				mgrprivilege=mgrprivilege(), 
+				categoryid=categoryid,
+				categorys=categorys, 
+				photocount=40)
 
 # blog page
 class blog:
-	def GET(self, categoryid = None, blogid = None):
+	def GET(self, categoryid=None, blogid=None):
 		categorys = json.loads(appblog.category().GET())
 		blogs = json.loads(appblog.blog().GET(blogid, True))
 		#mylog.loginfo(appblog.blog())
-		return render.blogview(menuname='/blog',
-				login = islogin(), 
-				mgrprivilege = mgrprivilege(),
-				blogid = blogid, 
-				categoryid = categoryid,
-				categorys = categorys, 
-				blogs = blogs)
+		return render.blogview(
+				config=config,
+				menuname='/blog',
+				login=islogin(), 
+				mgrprivilege=mgrprivilege(),
+				blogid=blogid, 
+				categoryid=categoryid,
+				categorys=categorys, 
+				blogs=blogs)
 
 # blog list
 class bloglist:
@@ -164,16 +172,18 @@ class bloglist:
 			pageidx = 1
 		blogs = json.loads(appblog.bloglist().GET(categoryid, pageidx, pagesize))
 		#mylog.loginfo(appblog.bloglist().GET(categoryid,pageidx,pagesize))
-		return render.blogview(menuname = '/blog',
-				login = islogin(), 
-				mgrprivilege = mgrprivilege(),
-				blogid = None, 
-				categoryid = categoryid, 
-				categorys = categorys, 
-				blogs = blogs,
-				pagecount = pagecount,
-				pageidx = pageidx,
-				pagesize = pagesize)
+		return render.blogview(
+				config=config,
+				menuname='/blog',
+				login=islogin(), 
+				mgrprivilege=mgrprivilege(),
+				blogid=None, 
+				categoryid=categoryid, 
+				categorys=categorys, 
+				blogs=blogs,
+				pagecount=pagecount,
+				pageidx=pageidx,
+				pagesize=pagesize)
 
 # resource page
 class resource:
@@ -194,21 +204,25 @@ class resource:
 			pageidx = 1
 		resources = json.loads(appres.resourcelist().GET(categoryid, \
 				pageidx, pagesize))
-		return render.resourceview(menuname = '/resource',
-				login = islogin(), 
-				mgrprivilege = mgrprivilege(),
-				resourceid = None, 
-				categoryid = categoryid, 
-				categorys = categorys, 
-				resources = resources,
-				pagecount = pagecount,
-				pageidx = pageidx,
-				pagesize = pagesize)
+		return render.resourceview(
+				config=config,
+				menuname='/resource',
+				login=islogin(), 
+				mgrprivilege=mgrprivilege(),
+				resourceid=None, 
+				categoryid=categoryid, 
+				categorys=categorys, 
+				resources=resources,
+				pagecount=pagecount,
+				pageidx=pageidx,
+				pagesize=pagesize)
 
 # manage blog page
 class mgrblog:
 	def GET(self, blogid=None):
-		return render.mgrblogview(menuname='/manage',
+		return render.mgrblogview(
+				config=config,
+				menuname='/manage',
 				curmgrtype='/blog',
 				login=islogin(), 
 				mgrprivilege=mgrprivilege(), 
@@ -217,7 +231,9 @@ class mgrblog:
 # manage photo page
 class mgrphoto:
 	def GET(self, photoid=None):
-		return render.mgrphotoview(menuname='/manage',
+		return render.mgrphotoview(
+				config=config,
+				menuname='/manage',
 				curmgrtype='/photo',
 				login=islogin(), 
 				mgrprivilege=mgrprivilege(), 
@@ -232,7 +248,9 @@ class mgrres:
 			resource = json.loads(appres.resource().GET(resourceid))
 			mylog.loginfo(resource)
 		mylog.loginfo(categorys)
-		return render.mgrresview(menuname = '/manage',
+		return render.mgrresview(
+				config=config,
+				menuname = '/manage',
 				curmgrtype = '/resource',
 				login = islogin(), 
 				mgrprivilege = mgrprivilege(), 
@@ -243,12 +261,15 @@ class mgrres:
 # manage user page
 class mgruser:
 	def GET(self, userid=None):
-		return render.mgruserview(menuname='/manage',
+		return render.mgruserview(
+				config=config,
+				menuname='/manage',
 				curmgrtype='/user',
 				login=islogin(), 
 				mgrprivilege=mgrprivilege(),
 				userid=userid)
 
+application = app.wsgifunc(mylog)
 
 if __name__ == "__main__":
 	web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)

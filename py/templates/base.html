@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="baidu-site-verification" content="bHvQ6gFu33" />
 		<meta name="google-site-verification" content="vk-UicA5s3bUfvIbgE9eYTECP9MbTtXQrRsBvVBvbvw" />
-		<title>${self.title()}逆水行舟</title>
+		<title>${self.title()}${config.title}</title>
 		<meta name="keywords" content="${self.keywords()}">
 		<link type="image/x-icon" rel="Shortcut Icon" href="/static/image/favicon.png"/>
 		<!--
@@ -39,7 +39,8 @@ menus.append('<a href="/about">关于</a>')
 
 	<body id="my-interior">
 		<div id="my-header">
-			<a id="my-navigation-home" href="http://www.hopez.org"></a>
+			<a id="my-navigation-home" href="http://www.hopez.org" alt="${config.station_desc}"></a>
+			<span id="my-station-desc">${config.station_desc}</span>
 			<div id="my-navigation">
 				<ul>
 					% for menu in menus:
@@ -68,16 +69,21 @@ menus.append('<a href="/about">关于</a>')
 						<div class="widget-side">
 							${self.category()}
 						</div>
+						% for widget in config.widgets:
+						<div class="widget-side">
+							<h4>${widget}</h4>
+							<ul class="newlink">
+							% for (name, link) in config.widgets[widget].iteritems():
+							<li><a href="${link}" target="_blank">${name}</a></li>
+							% endfor
+							</ul>
+						</div>
+						% endfor
+						<!--
 						<div class="widget-side">
 							<h4>友情链接</h4>
 							<ul class="newlink">
 								<li><a href="http://www.rui-yang.com/" target="_blank">Everybody loves Rui</a></li>
-							</ul>
-						</div>
-						<div class="widget-side">
-							<h4>个人资料</h4>
-							<ul class="newlink">
-								<li>zhangshizhuo@gmail.com</li>
 							</ul>
 						</div>
 						<div class="widget-side">
@@ -88,13 +94,6 @@ menus.append('<a href="/about">关于</a>')
 								<li><a href="https://clientarea.ramnode.com/aff.php?aff=1614" target="_blank">ramnode 低价&稳定</a></li>
 							</ul>
 						</div>
-						<!--
-						<div class="widget-side">
-							<h4>阅读，电影</h4>
-							<script type="text/javascript" src="http://www.douban.com/service/badge/29839642/?selection=random&amp;picsize=medium&amp;show=collection&amp;n=8&amp;hidelogo=on&amp;cat=book&amp;columns=2"></script>
-						</div>
-						<a id="scrollDown" href="#my-footer" title=""></a>
-						<a id="scrollUp" href="#top" title=""></a>
 						-->
 					</div>
 				</div>
