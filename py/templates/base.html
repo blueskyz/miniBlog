@@ -74,7 +74,11 @@ menus.append('<a href="/about">关于</a>')
 							<h4>${widget}</h4>
 							<ul class="newlink">
 							% for (name, link) in config.widgets[widget].iteritems():
+                            % if link:
 							<li><a href="${link}" target="_blank">${name}</a></li>
+                            % else:
+                            <li><a href="##">${name}</a></li>
+                            % endif
 							% endfor
 							</ul>
 						</div>
